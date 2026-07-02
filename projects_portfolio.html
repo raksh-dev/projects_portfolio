@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Engineering Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--bg-card:#0c1220;--bg-el:#111827;
+  --border:rgba(255,255,255,0.07);--border-h:rgba(255,255,255,0.16);
+  --cyan:#22d3ee;--amber:#fbbf24;--em:#34d399;--vi:#a78bfa;--co:#fb7185;
+  --text:#e2e8f0;--muted:#64748b;--dim:#1e293b;
+  --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;display:flex;flex-direction:column;font-size:15px}
+/* HEADER */
+header{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(6,9,15,0.95);z-index:100;backdrop-filter:blur(16px)}
+.logo{font-family:var(--fh);font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;letter-spacing:-0.3px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--em);animation:livepulse 2s infinite}
+@keyframes livepulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0.5)}50%{box-shadow:0 0 0 6px rgba(52,211,153,0)}}
+.toggle-wrap{display:flex;background:var(--bg-card);border:1px solid var(--border);border-radius:40px;padding:3px;gap:2px}
+.aud-btn{padding:7px 20px;border-radius:40px;border:none;background:transparent;color:var(--muted);font-family:var(--fb);font-size:13px;cursor:pointer;transition:all 0.25s;font-weight:400}
+.aud-btn.active{background:var(--cyan);color:#000;font-weight:500}
+/* LAYOUT */
+.app{display:flex;flex:1}
+/* SIDEBAR */
+aside{width:272px;flex-shrink:0;padding:20px 14px;border-right:1px solid var(--border);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.side-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-family:var(--fm);padding:0 12px;margin:8px 0 4px}
+.pj-btn{width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:var(--fb)}
+.pj-btn:hover{background:var(--bg-card);color:var(--text);border-color:var(--border)}
+.pj-btn.active{background:var(--bg-card);border-color:var(--border-h);color:var(--text)}
+.pj-cat{font-size:10px;font-family:var(--fm);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;display:block}
+.pj-name{font-size:13px;font-weight:500;line-height:1.4}
+/* MAIN */
+main{flex:1;padding:36px 44px;overflow-y:auto;max-width:1000px}
+/* PROJECT HEADER */
+.ph-cat{font-size:11px;font-family:var(--fm);color:var(--cyan);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.ph-cat::before{content:'';width:18px;height:1px;background:var(--cyan);display:block}
+.ph-title{font-family:var(--fh);font-size:34px;font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:14px}
+.ph-sub{font-size:15px;color:var(--muted);max-width:620px;line-height:1.65;margin-bottom:24px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.chip{padding:5px 14px;border-radius:40px;border:1px solid;font-size:12px;font-family:var(--fm);font-weight:500;line-height:1.2}
+.chip-c{border-color:rgba(34,211,238,0.4);color:var(--cyan);background:rgba(34,211,238,0.07)}
+.chip-a{border-color:rgba(251,191,36,0.4);color:var(--amber);background:rgba(251,191,36,0.07)}
+.chip-e{border-color:rgba(52,211,153,0.4);color:var(--em);background:rgba(52,211,153,0.07)}
+.chip-v{border-color:rgba(167,139,250,0.4);color:var(--vi);background:rgba(167,139,250,0.07)}
+.chip-co{border-color:rgba(251,113,133,0.4);color:var(--co);background:rgba(251,113,133,0.07)}
+.chip-sk{border-color:rgba(56,189,248,0.4);color:#38bdf8;background:rgba(56,189,248,0.07)}
+.chip-or{border-color:rgba(251,146,60,0.4);color:#fb923c;background:rgba(251,146,60,0.07)}
+.upcoming-item{padding:10px 14px;cursor:default}
+.upcoming-cat{font-size:9px;font-family:var(--fm);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;display:block;color:var(--dim)}
+.upcoming-name{font-size:12px;color:var(--dim);display:block;margin-bottom:2px}
+.upcoming-tag{display:inline-block;padding:1px 7px;border-radius:4px;font-size:9px;font-family:var(--fm);color:var(--dim);border:1px solid var(--dim)}
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:32px}
+.tab{padding:10px 22px;border:none;background:transparent;color:var(--muted);font-family:var(--fb);font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.panel{display:none}.panel.active{display:block}
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.2s}
+.card:hover{border-color:var(--border-h)}
+.card-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:var(--fm);margin-bottom:12px}
+.card h3{font-family:var(--fh);font-size:16px;margin-bottom:10px}
+.card p,.card li{font-size:14px;color:var(--muted);line-height:1.65}
+.card ul{padding-left:18px}
+.card li{margin-bottom:4px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+/* TECH STACK TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.tag{padding:3px 10px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);font-size:11px;font-family:var(--fm);color:var(--muted)}
+/* ARCHITECTURE */
+.arch-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px 20px;margin-bottom:16px;overflow-x:auto}
+.arch-wrap svg{min-width:680px;width:100%}
+/* Flow animation */
+@keyframes dash{to{stroke-dashoffset:-20}}
+@keyframes nodepulse{0%,100%{opacity:0.85}50%{opacity:1}}
+.flow-line{animation:dash 1.4s linear infinite}
+/* HOW IT WORKS */
+.step-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.step-dots{display:flex;gap:6px;align-items:center}
+.sdot{width:7px;height:7px;border-radius:4px;background:var(--border-h);cursor:pointer;transition:all 0.25s}
+.sdot.active{background:var(--cyan);width:22px}
+.nav-btns{display:flex;gap:8px}
+.nav-btn{padding:8px 22px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text);font-family:var(--fb);font-size:13px;cursor:pointer;transition:all 0.2s}
+.nav-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.nav-btn:disabled{opacity:0.3;cursor:default;pointer-events:none}
+.step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px;display:flex;gap:28px;min-height:240px;animation:stepIn 0.3s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.step-num{font-family:var(--fh);font-size:72px;font-weight:800;color:var(--dim);line-height:1;flex-shrink:0;width:70px}
+.step-body{flex:1}
+.step-emoji{font-size:28px;margin-bottom:12px;display:block}
+.step-ttl{font-family:var(--fh);font-size:22px;font-weight:700;margin-bottom:10px}
+.step-desc{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.step-tech{padding:12px 16px;background:rgba(34,211,238,0.04);border-radius:8px;border-left:2px solid var(--cyan);font-size:12px;font-family:var(--fm);color:var(--muted);line-height:1.7}
+.step-tech.hidden{display:none}
+/* METRICS */
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:28px}
+.mc{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:22px 20px;text-align:center;position:relative;overflow:hidden}
+.mc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.mc-c::after{background:var(--cyan)}.mc-a::after{background:var(--amber)}.mc-e::after{background:var(--em)}.mc-v::after{background:var(--vi)}.mc-co::after{background:var(--co)}.mc-sk::after{background:#38bdf8}.mc-or::after{background:#fb923c}
+.mv{font-family:var(--fh);font-size:42px;font-weight:800;line-height:1;margin-bottom:6px}
+.mc-c .mv{color:var(--cyan)}.mc-a .mv{color:var(--amber)}.mc-e .mv{color:var(--em)}.mc-v .mv{color:var(--vi)}.mc-co .mv{color:var(--co)}.mc-sk .mv{color:#38bdf8}.mc-or .mv{color:#fb923c}
+.ml{font-size:12px;color:var(--muted);line-height:1.4}
+.chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+.chart-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:20px}
+/* AUDIENCE CONDITIONAL */
+.tech-txt,.nontech-txt{transition:opacity 0.2s}
+body.nontech .tech-txt{display:none}
+body.nontech .nontech-txt{display:block}
+.nontech-txt{display:none}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+/* ARCH LEGEND */
+.arch-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;padding:0 8px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-family:var(--fm)}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+/* Highlight box */
+.highlight-box{background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:16px 20px;margin-top:16px}
+.highlight-box p{color:var(--muted);font-size:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="live-dot"></span>
+    AI Engineering Portfolio
+  </div>
+  <div class="toggle-wrap">
+    <button class="aud-btn active" onclick="setAudience('tech',this)">Technical</button>
+    <button class="aud-btn" onclick="setAudience('nontech',this)">Non-Technical</button>
+  </div>
+</header>
+
+<div class="app">
+<aside>
+  <div class="side-label">Projects</div>
+  <button class="pj-btn active" onclick="showProject('resolvemesh',this)">
+    <span class="pj-cat" style="color:var(--vi)">Multi-Cloud · AI Agent · MLOps</span>
+    <span class="pj-name">ResolveMesh AI — Support Ticket Agent</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('opsforge',this)">
+    <span class="pj-cat" style="color:var(--em)">Full-Stack · AI Agents · RAG</span>
+    <span class="pj-name">OpsForge AI — Operations Assistant</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('visionlog',this)">
+    <span class="pj-cat" style="color:#38bdf8">Serverless · Vision · GCP</span>
+    <span class="pj-name">VisionLog — Image Recognition Platform</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('pulse',this)">
+    <span class="pj-cat" style="color:var(--co)">Data Eng · Streaming · LLM</span>
+    <span class="pj-name">PulseStream — Sentiment Pipeline</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('guardrails',this)">
+    <span class="pj-cat" style="color:#fb923c">AI Safety · RAG · FastAPI</span>
+    <span class="pj-name">AI Library API — Guardrail System</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('bank',this)">
+    <span class="pj-cat" style="color:var(--cyan)">FinTech · AI Underwriting</span>
+    <span class="pj-name">Bank Statement Analysis Assistant</span>
+  </button>
+  <button class="pj-btn" onclick="showProject('inventory',this)">
+    <span class="pj-cat" style="color:var(--amber)">Enterprise · ML · Data Eng</span>
+    <span class="pj-name">Inventory Standardization Engine</span>
+  </button>
+  <div class="side-label" style="margin-top:16px">Upcoming</div>
+  <div class="upcoming-item">
+    <span class="upcoming-cat">DevOps</span>
+    <span class="upcoming-name">CI/CD Pipeline with Jenkins</span>
+    <span class="upcoming-tag">In Progress</span>
+  </div>
+  <div class="upcoming-item">
+    <span class="upcoming-cat">IaC · Azure</span>
+    <span class="upcoming-name">Terraform Azure Solution</span>
+    <span class="upcoming-tag">Planned</span>
+  </div>
+</aside>
+
+<main>
+
+<!-- ============================================================ PROJECT: BANK ============================================================ -->
+<div id="proj-bank" class="project" style="display:none">
+  <div class="ph-cat">FinTech · AI Underwriting</div>
+  <h1 class="ph-title">Bank Statement Analysis<br>Assistant</h1>
+  <p class="ph-sub tech-txt">AI-driven platform with multi-format extraction pipelines, OpenAI transaction classifiers, semantic search, and voice/text Q&A for automated loan underwriting decisions.</p>
+  <p class="ph-sub nontech-txt">A smart system that reads bank statements automatically, understands spending patterns, and helps loan officers make faster, more accurate decisions — without manual review.</p>
+  <div class="chips">
+    <span class="chip chip-c">70% Faster Decisions</span>
+    <span class="chip chip-e">Improved Accuracy</span>
+    <span class="chip chip-a">Multi-format Parsing</span>
+    <span class="chip chip-v">Voice Q&A</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'bank','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'bank','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'bank','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'bank','results')">Results & Metrics</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="bank-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Manual Underwriting Bottleneck</h3>
+        <h3 class="nontech-txt">Too Slow, Too Manual</h3>
+        <p class="tech-txt">Underwriters manually reviewed PDFs, CSVs, and scanned images of bank statements. Inconsistent formats meant different extraction logic per bank, high error rates, and 3–5 day turnaround windows that blocked loan pipelines.</p>
+        <p class="nontech-txt">Loan officers had to read through hundreds of pages of bank records by hand — different banks formatted things differently, making it slow, error-prone, and expensive. Decisions that should take hours took days.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">AI Extraction + Semantic Q&A</h3>
+        <h3 class="nontech-txt">A Smart Reading Assistant</h3>
+        <p class="tech-txt">Built a unified parsing pipeline handling PDF, CSV, and image formats. OpenAI-powered classifiers categorize transactions semantically. A vector-indexed search layer enables natural language queries over financial data, with voice interface for hands-free Q&A.</p>
+        <p class="nontech-txt">The system reads any bank statement format automatically, categorizes income and expenses intelligently, and lets loan officers ask questions in plain English — like asking a very fast, very accurate financial analyst.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>Multi-format document parsing (PDF, CSV, images)</li>
+          <li>AI transaction classification &amp; categorization</li>
+          <li>Semantic search over financial records</li>
+          <li>Voice + text Q&amp;A interface</li>
+          <li>Automated risk signal extraction</li>
+          <li>Standardized output for underwriting systems</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <h3 class="tech-txt">Core Technologies</h3>
+        <h3 class="nontech-txt">Tools Used</h3>
+        <div class="tags">
+          <span class="tag">OpenAI GPT-4</span><span class="tag">Python</span><span class="tag">LangChain</span>
+          <span class="tag">Pinecone / pgvector</span><span class="tag">pdfplumber</span><span class="tag">Tesseract OCR</span>
+          <span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">Whisper API</span><span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div id="bank-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- Node: Input -->
+        <rect x="10" y="90" width="110" height="80" rx="10" fill="#111827" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <text x="65" y="122" fill="#22d3ee" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">INPUT</text>
+        <text x="65" y="140" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="11" text-anchor="middle">PDF · CSV · Images</text>
+        <text x="65" y="156" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Bank statements</text>
+        <!-- Arrow 1 -->
+        <line x1="121" y1="130" x2="148" y2="130" stroke="rgba(34,211,238,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" class="flow-line"/>
+        <!-- Node: Parser -->
+        <rect x="150" y="80" width="120" height="100" rx="10" fill="#0f1a2e" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <text x="210" y="112" fill="#a78bfa" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">PARSER</text>
+        <text x="210" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="11" text-anchor="middle">Multi-format</text>
+        <text x="210" y="147" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">pdfplumber · OCR</text>
+        <text x="210" y="163" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">CSV normalizer</text>
+        <!-- Arrow 2 -->
+        <line x1="271" y1="130" x2="298" y2="130" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" class="flow-line" style="animation-delay:-0.5s"/>
+        <!-- Node: Classifier -->
+        <rect x="300" y="80" width="130" height="100" rx="10" fill="#0f1a2e" stroke="rgba(251,191,36,0.4)" stroke-width="1"/>
+        <text x="365" y="112" fill="#fbbf24" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">AI CLASSIFIER</text>
+        <text x="365" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="11" text-anchor="middle">GPT-4 powered</text>
+        <text x="365" y="147" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Transaction tagging</text>
+        <text x="365" y="163" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Risk signal detection</text>
+        <!-- Arrow 3 -->
+        <line x1="431" y1="130" x2="458" y2="130" stroke="rgba(251,191,36,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" class="flow-line" style="animation-delay:-1s"/>
+        <!-- Node: Vector Store -->
+        <rect x="460" y="80" width="130" height="100" rx="10" fill="#0f1a2e" stroke="rgba(52,211,153,0.4)" stroke-width="1"/>
+        <text x="525" y="112" fill="#34d399" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">VECTOR INDEX</text>
+        <text x="525" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="11" text-anchor="middle">Semantic search</text>
+        <text x="525" y="147" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Pinecone · pgvector</text>
+        <text x="525" y="163" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Embedding store</text>
+        <!-- Arrow 4 -->
+        <line x1="591" y1="130" x2="618" y2="130" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" class="flow-line" style="animation-delay:-1.5s"/>
+        <!-- Node: Q&A -->
+        <rect x="620" y="80" width="120" height="100" rx="10" fill="#0f1a2e" stroke="rgba(251,191,36,0.4)" stroke-width="1"/>
+        <text x="680" y="112" fill="#fbbf24" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">Q&amp;A LAYER</text>
+        <text x="680" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="11" text-anchor="middle">Voice + Text</text>
+        <text x="680" y="147" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Whisper + GPT-4</text>
+        <text x="680" y="163" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">RAG pipeline</text>
+        <!-- Arrow 5 -->
+        <line x1="741" y1="130" x2="768" y2="130" stroke="rgba(34,211,238,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" class="flow-line" style="animation-delay:-2s"/>
+        <!-- Node: Decision -->
+        <rect x="770" y="80" width="80" height="100" rx="10" fill="#0d2218" stroke="rgba(52,211,153,0.5)" stroke-width="1.5"/>
+        <text x="810" y="116" fill="#34d399" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">LOAN</text>
+        <text x="810" y="133" fill="#34d399" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">DECISION</text>
+        <text x="810" y="153" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Automated</text>
+        <text x="810" y="167" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">report output</text>
+        <!-- Data flow label at top -->
+        <text x="430" y="28" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">DATA FLOW — Real-time document processing pipeline</text>
+        <line x1="10" y1="38" x2="850" y2="38" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- Bottom labels -->
+        <text x="65" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Source</text>
+        <text x="210" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Extraction</text>
+        <text x="365" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Intelligence</text>
+        <text x="525" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Retrieval</text>
+        <text x="680" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Interface</text>
+        <text x="810" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">Output</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(34,211,238,0.5)"></div>Input / Output layer</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>Document processing</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>AI / Model layer</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>Storage / Decision</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">Extraction Layer</div>
+        <p class="tech-txt">pdfplumber handles text-based PDFs. Tesseract OCR processes scanned docs. Custom parsers normalize diverse CSV formats from 50+ banks into a unified schema.</p>
+        <p class="nontech-txt">Like having a reader who can understand any bank's paperwork format and convert it into a single standard format automatically.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">AI Classification</div>
+        <p class="tech-txt">GPT-4 with structured output schemas classifies each transaction by category, flags irregular patterns, identifies income streams, and extracts risk signals like overdrafts and inconsistencies.</p>
+        <p class="nontech-txt">The AI reads through every transaction and understands what it is — salary, rent, groceries — and flags anything unusual that might matter for the loan decision.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Q&amp;A Interface</div>
+        <p class="tech-txt">Whisper transcribes voice queries → embedded with OpenAI text-embedding-3 → retrieved via semantic similarity → GPT-4 synthesizes answers grounded in the actual document data (RAG).</p>
+        <p class="nontech-txt">Loan officers can literally ask questions out loud — "What's the average monthly income?" — and get instant, accurate answers based on the actual statements.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div id="bank-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="bank-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="bank-prev" onclick="stepNav('bank',-1)" disabled>← Prev</button>
+        <button class="nav-btn" id="bank-next" onclick="stepNav('bank',1)">Next →</button>
+      </div>
+    </div>
+    <div id="bank-step-card" class="step-card"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="bank-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-c"><div class="mv" data-target="70" data-suffix="%">0%</div><div class="ml">Faster loan decision turnaround</div></div>
+      <div class="mc mc-a"><div class="mv" data-target="50" data-suffix="+">0+</div><div class="ml">Bank formats supported</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="95" data-suffix="%">0%</div><div class="ml">Document standardization accuracy</div></div>
+      <div class="mc mc-v"><div class="mv" data-target="3" data-suffix="x">0x</div><div class="ml">More applications reviewed/day</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Loan Decision Turnaround Time</div>
+        <div style="position:relative;height:220px"><canvas id="bankChart1" role="img" aria-label="Bar chart showing turnaround time reduction from 5 days to 1.5 days"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Document Processing Accuracy by Format</div>
+        <div style="position:relative;height:220px"><canvas id="bankChart2" role="img" aria-label="Bar chart showing accuracy by document format"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Business Impact</div>
+      <p class="tech-txt">Reduced underwriting pipeline from 3–5 business days to under 24 hours. Standardized output schema eliminated per-bank custom extraction code. Voice Q&A reduced context-switching time for underwriters reviewing multiple applications simultaneously.</p>
+      <p class="nontech-txt">What used to take a team of people 3–5 days now takes the system under a day. Loan officers stopped spending time digging through paperwork and started spending time making decisions. The bank could review 3x more applications with the same team.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ PROJECT: PULSESTREAM ============================================================ -->
+<div id="proj-pulse" class="project" style="display:none">
+  <div class="ph-cat" style="color:var(--co)">Data Engineering · Streaming · LLM</div>
+  <h1 class="ph-title">PulseStream</h1>
+  <p class="ph-sub tech-txt">Real-time streaming pipeline that ingests product reviews and social comments via Kinesis, scores sentiment with VADER, enriches with KeyBERT + langdetect, auto-ingests into Snowflake via Snowpipe, summarizes in batches with Groq LLM, and surfaces live analytics on a Streamlit dashboard with statistical anomaly alerts.</p>
+  <p class="ph-sub nontech-txt">A live intelligence system that reads customer reviews and social posts as they happen, understands how people feel, summarizes the themes using AI, and immediately alerts the team when something starts going wrong — so product decisions are based on right now, not last week's report.</p>
+  <div class="chips">
+    <span class="chip chip-co">Real-time Streaming</span>
+    <span class="chip chip-c">~98% LLM Cost Reduction</span>
+    <span class="chip chip-e">Statistical Anomaly Detection</span>
+    <span class="chip chip-v">3-Version Architecture</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'pulse','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'pulse','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'pulse','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'pulse','results')">Results & Metrics</button>
+  </div>
+
+  <div id="pulse-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Lagged Sentiment = Blind Decisions</h3>
+        <h3 class="nontech-txt">Teams Flying Blind Between Reports</h3>
+        <p class="tech-txt">Product, support, and brand teams received sentiment data in weekly batch reports — by which point negative spikes had already compounded. No real-time signal, no "why" behind the numbers, no proactive alerting. A bad product update could go undetected for days.</p>
+        <p class="nontech-txt">Companies only found out customers were unhappy when they read a weekly report — sometimes days after a bad product update went out. There was no early warning system, no way to see themes in real time, and no one getting paged when reviews suddenly turned negative.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">Kinesis → Snowflake → Groq → Streamlit</h3>
+        <h3 class="nontech-txt">Live Dashboard with AI Insight Cards</h3>
+        <p class="tech-txt">Six-stage streaming pipeline: Kinesis ingestion → VADER in-process scoring → S3 micro-batch sink → Snowpipe auto-ingest → Snowpark hourly rollups + Groq batch LLM summaries → statistical z-score anomaly detection. All surfaces converge on a single Streamlit dashboard that degrades gracefully across v1/v2/v3.</p>
+        <p class="nontech-txt">A live dashboard showing sentiment the moment it's published. The AI summarizes themes every 10 minutes, a positivity gauge updates continuously, and the system sends an alert the moment a product's negative review rate spikes above its own baseline.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>Multi-source ingestion: mock, Reddit (PRAW), Twitter (Tweepy)</li>
+          <li>In-process VADER sentiment scoring — zero API cost</li>
+          <li>v2 enrichment: language detection, KeyBERT keywords, dedup</li>
+          <li>Snowpipe auto-ingest — tolerates warehouse downtime via S3 queue</li>
+          <li>Groq LLM batch summaries (50–100 reviews per call)</li>
+          <li>Per-product z-score anomaly detection with configurable thresholds</li>
+          <li>Streamlit dashboard: gauge, trends, keyword cloud, alert panel</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">AWS Kinesis</span><span class="tag">AWS S3</span>
+          <span class="tag">Snowflake + Snowpipe</span><span class="tag">Snowpark</span>
+          <span class="tag">VADER</span><span class="tag">KeyBERT</span><span class="tag">langdetect</span>
+          <span class="tag">Groq LLM (Llama 3.1)</span><span class="tag">Streamlit</span>
+          <span class="tag">PRAW · Tweepy</span><span class="tag">Faker</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="card-lbl">Design Decisions Worth Noting</div>
+      <ul>
+        <li class="tech-txt"><strong>Batch-first LLM:</strong> grouping 50–100 reviews per Groq call cuts API cost ~98% vs per-event while giving the model richer context for summaries.</li>
+        <li class="tech-txt"><strong>Forward-compatible schema:</strong> v3 columns (platform, geo_region, hashed author_id) declared in DDL from day one — no migration when moving between versions, just a flag flip.</li>
+        <li class="tech-txt"><strong>Graceful degradation:</strong> <code>safe_query()</code> returns (df, error) so missing v2/v3 tables show a setup hint instead of crashing the dashboard.</li>
+        <li class="nontech-txt"><strong>Cost-efficient AI:</strong> instead of asking the AI to analyze every single review one by one (expensive), the system batches 50–100 reviews and asks once — same quality, ~98% cheaper.</li>
+        <li class="nontech-txt"><strong>No data loss:</strong> if the data warehouse goes offline briefly, reviews queue safely in S3 and load automatically when it comes back — no manual recovery needed.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="pulse-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 310" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="26" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">PULSESTREAM — real-time sentiment pipeline with LLM summarization &amp; anomaly detection</text>
+        <line x1="10" y1="36" x2="850" y2="36" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- SOURCES -->
+        <rect x="8" y="68" width="92" height="110" rx="10" fill="#1a0d10" stroke="rgba(251,113,133,0.45)" stroke-width="1"/>
+        <text x="54" y="98" fill="#fb7185" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">SOURCES</text>
+        <text x="54" y="114" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Mock data</text>
+        <text x="54" y="129" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Reddit/PRAW</text>
+        <text x="54" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Twitter/Tweepy</text>
+        <text x="54" y="162" fill="#4b5563" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Faker · PRAW · Tweepy</text>
+        <line x1="101" y1="123" x2="120" y2="123" stroke="rgba(251,113,133,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-p)" class="flow-line"/>
+        <!-- KINESIS -->
+        <rect x="122" y="68" width="100" height="110" rx="10" fill="#0f1a2e" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <text x="172" y="98" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">KINESIS BUS</text>
+        <text x="172" y="114" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Streaming bus</text>
+        <text x="172" y="129" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">or local JSONL</text>
+        <text x="172" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Shard-partitioned</text>
+        <text x="172" y="162" fill="#4b5563" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">boto3 / local mode</text>
+        <line x1="223" y1="123" x2="242" y2="123" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-0.4s"/>
+        <!-- CONSUMER/VADER -->
+        <rect x="244" y="60" width="116" height="126" rx="10" fill="#0f1a2e" stroke="rgba(251,113,133,0.5)" stroke-width="1.5"/>
+        <text x="302" y="90" fill="#fb7185" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">CONSUMER</text>
+        <text x="302" y="106" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">VADER scoring</text>
+        <text x="302" y="121" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">v2: +langdetect</text>
+        <text x="302" y="136" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">+KeyBERT kws</text>
+        <text x="302" y="151" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">+dedup hash</text>
+        <text x="302" y="168" fill="#4b5563" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">consumer.py · enrichment.py</text>
+        <line x1="361" y1="123" x2="380" y2="123" stroke="rgba(251,113,133,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-0.8s"/>
+        <!-- S3 MICRO-BATCH -->
+        <rect x="382" y="68" width="100" height="110" rx="10" fill="#0f1a2e" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <text x="432" y="98" fill="#22d3ee" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">S3 MICRO-BATCH</text>
+        <text x="432" y="114" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">NDJSON files</text>
+        <text x="432" y="129" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Hive-style paths</text>
+        <text x="432" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Flush by time</text>
+        <text x="432" y="162" fill="#4b5563" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">MicroBatchSink</text>
+        <line x1="483" y1="123" x2="502" y2="123" stroke="rgba(34,211,238,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-1.2s"/>
+        <!-- SNOWPIPE -->
+        <rect x="504" y="68" width="98" height="110" rx="10" fill="#0f1a2e" stroke="rgba(52,211,153,0.45)" stroke-width="1"/>
+        <text x="553" y="98" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">SNOWPIPE</text>
+        <text x="553" y="114" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Auto-ingest</text>
+        <text x="553" y="129" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">SQS trigger</text>
+        <text x="553" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">REVIEWS_RAW</text>
+        <text x="553" y="162" fill="#4b5563" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">snowpipe_setup.sql</text>
+        <!-- Fork from REVIEWS_RAW down to 3 branches -->
+        <line x1="603" y1="123" x2="626" y2="123" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-1.6s"/>
+        <!-- Central hub -->
+        <rect x="628" y="98" width="18" height="50" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+        <text x="637" y="127" fill="#4b5563" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">⫸</text>
+        <!-- Branch 1: Snowpark -->
+        <line x1="647" y1="108" x2="672" y2="80" stroke="rgba(52,211,153,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line"/>
+        <rect x="674" y="54" width="80" height="52" rx="8" fill="#0a1a12" stroke="rgba(52,211,153,0.5)" stroke-width="1"/>
+        <text x="714" y="77" fill="#34d399" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">SNOWPARK</text>
+        <text x="714" y="92" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Hourly rollups</text>
+        <!-- Branch 2: Groq LLM -->
+        <line x1="647" y1="123" x2="672" y2="123" stroke="rgba(251,113,133,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-0.6s"/>
+        <rect x="674" y="108" width="80" height="52" rx="8" fill="#1a0d10" stroke="rgba(251,113,133,0.5)" stroke-width="1"/>
+        <text x="714" y="131" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">GROQ LLM</text>
+        <text x="714" y="146" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Batch summaries</text>
+        <!-- Branch 3: Anomaly -->
+        <line x1="647" y1="138" x2="672" y2="166" stroke="rgba(251,191,36,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-1.2s"/>
+        <rect x="674" y="162" width="80" height="52" rx="8" fill="#1a1400" stroke="rgba(251,191,36,0.5)" stroke-width="1"/>
+        <text x="714" y="185" fill="#fbbf24" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">ANOMALY</text>
+        <text x="714" y="200" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Z-score alerts</text>
+        <!-- All 3 → Dashboard -->
+        <line x1="755" y1="80" x2="780" y2="112" stroke="rgba(34,211,238,0.45)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line"/>
+        <line x1="755" y1="134" x2="780" y2="134" stroke="rgba(34,211,238,0.45)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-0.5s"/>
+        <line x1="755" y1="188" x2="780" y2="156" stroke="rgba(34,211,238,0.45)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-p)" class="flow-line" style="animation-delay:-1s"/>
+        <!-- Dashboard -->
+        <rect x="782" y="88" width="70" height="92" rx="10" fill="#0a1220" stroke="rgba(34,211,238,0.55)" stroke-width="1.5"/>
+        <text x="817" y="117" fill="#22d3ee" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">STREAMLIT</text>
+        <text x="817" y="131" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Live gauge</text>
+        <text x="817" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Trends</text>
+        <text x="817" y="159" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Insight cards</text>
+        <text x="817" y="173" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Alert panel</text>
+        <!-- Stage labels -->
+        <text x="54" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Sources</text>
+        <text x="172" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stream</text>
+        <text x="302" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Score + Enrich</text>
+        <text x="432" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage</text>
+        <text x="553" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Warehouse</text>
+        <text x="714" y="230" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Aggregation + Intelligence</text>
+        <text x="817" y="205" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Viz</text>
+        <!-- Version badges -->
+        <rect x="8" y="240" width="220" height="50" rx="8" fill="rgba(251,113,133,0.04)" stroke="rgba(251,113,133,0.15)" stroke-width="0.5"/>
+        <text x="118" y="260" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">v1 Batch MVP</text>
+        <text x="118" y="276" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Mock → Kinesis → VADER → S3 → Snowpipe → Dashboard</text>
+        <rect x="240" y="240" width="200" height="50" rx="8" fill="rgba(167,139,250,0.04)" stroke="rgba(167,139,250,0.15)" stroke-width="0.5"/>
+        <text x="340" y="260" fill="#a78bfa" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">v2 Enrichment &amp; Intelligence</text>
+        <text x="340" y="276" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">+ lang/kw/dedup + Snowpark + Groq LLM</text>
+        <rect x="452" y="240" width="200" height="50" rx="8" fill="rgba(52,211,153,0.04)" stroke="rgba(52,211,153,0.15)" stroke-width="0.5"/>
+        <text x="552" y="260" fill="#34d399" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">v3 Real Data &amp; Alerting</text>
+        <text x="552" y="276" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">+ Reddit/Twitter connectors + anomaly detection</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,113,133,0.5)"></div>Source / consumer layer</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>Streaming bus</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(34,211,238,0.5)"></div>Staging / Snowflake</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>Aggregation</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>Anomaly / alerting</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">VADER + Enrichment</div>
+        <p class="tech-txt">VADER runs in-process with zero API cost — compound score ≥0.05 = positive, ≤-0.05 = negative. v2 enrichment layer (lazy-loaded) adds langdetect for language, KeyBERT top-N keywords, and a normalized text hash for deduplication before writing to S3.</p>
+        <p class="nontech-txt">Sentiment scoring happens instantly, inside the app, for free — no external API needed. The v2 upgrade also detects language, extracts the most important words from each review, and removes duplicate submissions.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Groq Batch Summarization</div>
+        <p class="tech-txt">Scheduled job pulls last N minutes of raw reviews, groups by (product_id, source), sends 50–100 reviews per Groq call with JSON response mode requesting summary, positive_themes, negative_themes, recommended_action. Batching cuts API calls ~98% vs per-event. Writes one row to INSIGHTS_SUMMARY per batch.</p>
+        <p class="nontech-txt">Every 10 minutes, the AI reads the latest reviews in batches and produces a concise summary: what's going well, what's going badly, and what the team should do about it — at a tiny fraction of the cost of analyzing reviews one by one.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Anomaly Detection</div>
+        <p class="tech-txt">Per-product z-score detection: reads last N hours of SENTIMENT_AGG hourly buckets, computes baseline mean/std of pct_negative, flags if latest bucket exceeds mean + k·std (default k=2). Requires ≥4 historical buckets before firing — deliberately quiet for first few hours. Writes to SENTIMENT_ALERTS with z-score and baseline for evidence.</p>
+        <p class="nontech-txt">The system watches each product's normal level of negative reviews, and if a recent hour is statistically unusual — way above its own average — it raises an alert. It waits until it has enough history before alerting, so no false alarms on day one.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="pulse-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="pulse-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="pulse-prev" onclick="stepNav('pulse',-1)" disabled>← Prev</button>
+        <button class="nav-btn" id="pulse-next" onclick="stepNav('pulse',1)">Next →</button>
+      </div>
+    </div>
+    <div id="pulse-step-card" class="step-card"></div>
+  </div>
+
+  <div id="pulse-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-co"><div class="mv" data-target="98" data-suffix="%">0%</div><div class="ml">LLM API cost reduction via batching</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="2" data-suffix="min">0min</div><div class="ml">End-to-end data-to-dashboard latency</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="3" data-suffix=" versions">0 versions</div><div class="ml">Incrementally shippable pipeline versions</div></div>
+      <div class="mc mc-v"><div class="mv" data-target="0" data-suffix=" migrations">0 migrations</div><div class="ml">Schema migrations between versions</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">LLM Cost per 1,000 Reviews</div>
+        <div style="position:relative;height:220px"><canvas id="pulseChart1" role="img" aria-label="Cost comparison per-event vs batched LLM calls"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Live Sentiment Distribution</div>
+        <div style="position:relative;height:220px"><canvas id="pulseChart2" role="img" aria-label="Sentiment distribution across all reviews"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Engineering &amp; Business Impact</div>
+      <p class="tech-txt">The batch-first LLM design is the key architectural insight: grouping 50–100 reviews per Groq call reduces API invocations from ~1,000/hr to ~20/hr at the same insight quality. Snowpipe's decoupled auto-ingest eliminates custom retry logic — if the warehouse is briefly down, records queue in S3 and self-heal. Three shippable versions let teams start with local mock data and incrementally add cloud resources without code changes — only flag flips.</p>
+      <p class="nontech-txt">Product and brand teams went from reading sentiment weekly to seeing it update live. The cost of AI summaries dropped by ~98% by processing reviews in batches instead of one at a time. The pipeline is designed to start simple and scale — teams can run version 1 on a laptop, then add cloud and social connectors when ready, without rewriting anything.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ PROJECT: INVENTORY ============================================================ -->
+<div id="proj-inventory" class="project" style="display:none">
+  <div class="ph-cat" style="color:var(--amber)">Enterprise · ML · Data Engineering</div>
+  <h1 class="ph-title">Inventory Standardization<br>&amp; Auto-Mapping Engine</h1>
+  <p class="ph-sub tech-txt">Scalable AI/ML pipeline converting messy supplier inventory into standardized master records with SKU, GTIN, and HSN mappings — using hybrid rule-based + ML confidence scoring with human-in-the-loop review.</p>
+  <p class="ph-sub nontech-txt">A system that takes the chaotic, inconsistent product catalogs suppliers send in, and automatically converts them into a clean, organized, searchable master catalog — with human review for edge cases.</p>
+  <div class="chips">
+    <span class="chip chip-a">85% Auto-mapping Precision</span>
+    <span class="chip chip-e">60% Faster Vendor Onboarding</span>
+    <span class="chip chip-c">Enterprise Auditability</span>
+    <span class="chip chip-v">Human-in-the-Loop UI</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'inventory','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'inventory','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'inventory','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'inventory','results')">Results & Metrics</button>
+  </div>
+
+  <div id="inventory-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Supplier Data Chaos</h3>
+        <h3 class="nontech-txt">Every Supplier Speaks a Different Language</h3>
+        <p class="tech-txt">Enterprise vendors receive product data from hundreds of suppliers in inconsistent formats — mismatched descriptions, missing GTINs, ambiguous HSN codes, duplicate entries, and inconsistent units. Manual mapping was a massive bottleneck costing weeks per onboarding.</p>
+        <p class="nontech-txt">Each supplier sends product lists in their own format — different names for the same thing, missing codes, inconsistent units. Matching these to the company's own product catalog manually took weeks for each new supplier.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">Hybrid ML Pipeline with Confidence Scoring</h3>
+        <h3 class="nontech-txt">Smart Matching with Human Backup</h3>
+        <p class="tech-txt">End-to-end pipeline: ingestion → cleansing → ML clustering → multi-signal classifier → confidence scoring engine. High-confidence matches go straight to master catalog. Low-confidence items route to a human review UI. Reduces hallucinations through rule-based guardrails layered with ML output.</p>
+        <p class="nontech-txt">The system automatically matches 85% of products instantly using AI. For the other 15% it's not sure about, it shows a human reviewer the best guesses and asks them to confirm — combining AI speed with human accuracy.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>Multi-format ingestion (CSV, Excel, XML, JSON)</li>
+          <li>Data cleansing &amp; normalization pipeline</li>
+          <li>ML clustering for duplicate detection</li>
+          <li>SKU / GTIN / HSN auto-classification</li>
+          <li>Confidence scoring with threshold routing</li>
+          <li>React human-in-the-loop review interface</li>
+          <li>Audit trail for all mapping decisions</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">scikit-learn</span><span class="tag">sentence-transformers</span>
+          <span class="tag">Apache Spark</span><span class="tag">PostgreSQL</span><span class="tag">FastAPI</span>
+          <span class="tag">React</span><span class="tag">OpenAI embeddings</span><span class="tag">Redis</span>
+          <span class="tag">Airflow</span><span class="tag">Docker</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="inventory-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 310" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="26" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">INVENTORY STANDARDIZATION — 8-stage ML pipeline with confidence routing</text>
+        <line x1="10" y1="36" x2="850" y2="36" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- Stage 1: Ingestion -->
+        <rect x="8" y="68" width="95" height="90" rx="8" fill="#111827" stroke="rgba(251,191,36,0.4)" stroke-width="1"/>
+        <text x="55" y="100" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">INGEST</text>
+        <text x="55" y="116" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">CSV · Excel</text>
+        <text x="55" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">XML · JSON</text>
+        <text x="55" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Supplier formats</text>
+        <line x1="104" y1="113" x2="120" y2="113" stroke="rgba(251,191,36,0.5)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line"/>
+        <!-- Stage 2: Cleanse -->
+        <rect x="122" y="68" width="95" height="90" rx="8" fill="#0f1a2e" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <text x="169" y="100" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">CLEANSE</text>
+        <text x="169" y="116" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Normalize</text>
+        <text x="169" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Deduplicate</text>
+        <text x="169" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Schema map</text>
+        <line x1="218" y1="113" x2="234" y2="113" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-0.4s"/>
+        <!-- Stage 3: Cluster -->
+        <rect x="236" y="68" width="95" height="90" rx="8" fill="#0f1a2e" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <text x="283" y="100" fill="#22d3ee" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">CLUSTER</text>
+        <text x="283" y="116" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">ML grouping</text>
+        <text x="283" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Embeddings</text>
+        <text x="283" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Similarity</text>
+        <line x1="332" y1="113" x2="348" y2="113" stroke="rgba(34,211,238,0.5)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-0.8s"/>
+        <!-- Stage 4: Classify -->
+        <rect x="350" y="68" width="110" height="90" rx="8" fill="#0f1a2e" stroke="rgba(52,211,153,0.4)" stroke-width="1"/>
+        <text x="405" y="100" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">CLASSIFY</text>
+        <text x="405" y="116" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">SKU/GTIN/HSN</text>
+        <text x="405" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Rule-based+ML</text>
+        <text x="405" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Multi-signal</text>
+        <line x1="461" y1="113" x2="477" y2="113" stroke="rgba(52,211,153,0.5)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-1.2s"/>
+        <!-- Stage 5: Score -->
+        <rect x="479" y="68" width="100" height="90" rx="8" fill="#0f1a2e" stroke="rgba(251,191,36,0.5)" stroke-width="1.5"/>
+        <text x="529" y="100" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">SCORE</text>
+        <text x="529" y="116" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Confidence</text>
+        <text x="529" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">0-100 score</text>
+        <text x="529" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Threshold route</text>
+        <!-- Routing fork -->
+        <line x1="580" y1="113" x2="598" y2="113" stroke="rgba(251,191,36,0.5)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-1.6s"/>
+        <!-- High confidence path -->
+        <line x1="620" y1="100" x2="680" y2="78" stroke="rgba(52,211,153,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-2s"/>
+        <text x="648" y="80" fill="#34d399" font-family="DM Mono,monospace" font-size="9">≥85% →auto</text>
+        <!-- Low confidence path -->
+        <line x1="620" y1="126" x2="680" y2="148" stroke="rgba(251,191,36,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line" style="animation-delay:-2.4s"/>
+        <text x="632" y="152" fill="#fbbf24" font-family="DM Mono,monospace" font-size="9">&lt;85% →review</text>
+        <!-- Fork box -->
+        <rect x="598" y="88" width="22" height="50" rx="4" fill="rgba(255,255,255,0.04)" stroke="var(--border)" stroke-width="0.5"/>
+        <text x="609" y="117" fill="#64748b" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">⫸</text>
+        <!-- Auto approve -->
+        <rect x="700" y="52" width="80" height="50" rx="8" fill="#0a1a12" stroke="rgba(52,211,153,0.5)" stroke-width="1.5"/>
+        <text x="740" y="74" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">AUTO</text>
+        <text x="740" y="89" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">APPROVE</text>
+        <!-- Human review -->
+        <rect x="700" y="118" width="80" height="50" rx="8" fill="#1a1400" stroke="rgba(251,191,36,0.5)" stroke-width="1.5"/>
+        <text x="740" y="140" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">HUMAN</text>
+        <text x="740" y="155" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">REVIEW</text>
+        <!-- Master catalog -->
+        <line x1="781" y1="77" x2="808" y2="100" stroke="rgba(34,211,238,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line"/>
+        <line x1="781" y1="143" x2="808" y2="120" stroke="rgba(34,211,238,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr3)" class="flow-line"/>
+        <rect x="810" y="68" width="42" height="90" rx="8" fill="#0a1220" stroke="rgba(34,211,238,0.5)" stroke-width="1.5"/>
+        <text x="831" y="100" fill="#22d3ee" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">MASTER</text>
+        <text x="831" y="113" fill="#22d3ee" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">CATALOG</text>
+        <text x="831" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Audit</text>
+        <text x="831" y="143" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">trail</text>
+        <!-- Stage labels -->
+        <text x="55" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 1</text>
+        <text x="169" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 2</text>
+        <text x="283" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 3</text>
+        <text x="405" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 4</text>
+        <text x="529" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 5</text>
+        <text x="660" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Stage 6: Routing</text>
+        <text x="831" y="186" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Output</text>
+        <!-- Confidence note -->
+        <rect x="460" y="215" width="260" height="56" rx="8" fill="rgba(251,191,36,0.05)" stroke="rgba(251,191,36,0.15)" stroke-width="0.5"/>
+        <text x="590" y="237" fill="#fbbf24" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">CONFIDENCE ROUTING LOGIC</text>
+        <text x="590" y="252" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Score ≥ 85% → auto-approved to master catalog</text>
+        <text x="590" y="264" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Score &lt; 85% → human review queue with AI suggestions</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>Data ingestion</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>Processing</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>AI Classification</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(34,211,238,0.5)"></div>Final catalog</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">ML Clustering</div>
+        <p class="tech-txt">sentence-transformers generate product embeddings. Cosine similarity + DBSCAN clustering groups likely duplicates. TF-IDF features complement semantic embeddings for high-recall candidate generation before fine-grained matching.</p>
+        <p class="nontech-txt">The AI finds products that are probably the same thing even when described differently — like "Laptop 15in Silver" and "15" Silver Notebook Computer" — by understanding meaning, not just words.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Confidence Scoring</div>
+        <p class="tech-txt">Multi-signal score: semantic similarity (40%), attribute match rate (30%), historical mapping patterns (20%), rule-based validation (10%). Calibrated thresholds per product category. Scores &lt;85% trigger human review with top-3 candidates pre-ranked.</p>
+        <p class="nontech-txt">The system rates how sure it is about each match from 0-100%. Above 85% confidence it acts automatically. Below that, it shows a human the best options and asks them to pick — combining speed and accuracy.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Human Review UI</div>
+        <p class="tech-txt">React-based review interface shows AI-suggested matches with evidence (matched attributes, similarity scores, similar confirmed mappings). Reviewers accept/reject/correct. All decisions feed back into model training loop improving future confidence scores.</p>
+        <p class="nontech-txt">The review screen shows reviewers the AI's best guesses with explanations, making it fast to confirm or correct. Every human decision teaches the AI to do better next time.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="inventory-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="inventory-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="inventory-prev" onclick="stepNav('inventory',-1)" disabled>← Prev</button>
+        <button class="nav-btn" id="inventory-next" onclick="stepNav('inventory',1)">Next →</button>
+      </div>
+    </div>
+    <div id="inventory-step-card" class="step-card"></div>
+  </div>
+
+  <div id="inventory-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-a"><div class="mv" data-target="85" data-suffix="%">0%</div><div class="ml">Auto-mapping precision in production</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="60" data-suffix="%">0%</div><div class="ml">Reduction in vendor onboarding time</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="15" data-suffix="x">0x</div><div class="ml">Faster than manual mapping</div></div>
+      <div class="mc mc-v"><div class="mv" data-target="100" data-suffix="%">0%</div><div class="ml">Decision audit trail coverage</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Auto-mapping vs Human Review Distribution</div>
+        <div style="position:relative;height:220px"><canvas id="invChart1" role="img" aria-label="Pie chart of auto-mapped vs human reviewed items"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Vendor Onboarding Time (days)</div>
+        <div style="position:relative;height:220px"><canvas id="invChart2" role="img" aria-label="Bar chart showing vendor onboarding time reduction"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Enterprise Impact</div>
+      <p class="tech-txt">Reduced vendor onboarding from 4–6 weeks to under 2 weeks. 85% of mappings fully automated at production precision. Full audit trail enables compliance reporting. Model performance improves continuously via human feedback loop — precision increased from 71% at launch to 85% after 3 months of production use.</p>
+      <p class="nontech-txt">Adding a new supplier went from taking an entire team 6 weeks to under 2 weeks. The system gets smarter over time — the more decisions humans make, the better it gets at doing those decisions automatically.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECT: RESOLVEMESH AI ===== -->
+<div id="proj-resolvemesh" class="project">
+  <div class="ph-cat" style="color:var(--vi)">Multi-Cloud · AI Agent · MLOps</div>
+  <h1 class="ph-title">ResolveMesh AI</h1>
+  <p class="ph-sub tech-txt">Production-grade multi-cloud AI agent that ingests support tickets, enriches with Azure Cognitive Services NLP, retrieves KB articles via Azure Cognitive Search, and drafts grounded responses through AWS Bedrock — orchestrated end-to-end by GCP Vertex AI Pipelines with Terraform-managed infrastructure and OpenTelemetry observability.</p>
+  <p class="ph-sub nontech-txt">A smart support assistant that reads tickets automatically, finds the most relevant help articles, and writes a draft reply — all in under 8 seconds — using Azure, AWS, and GCP for the tasks each cloud does best, all wired together by one orchestration layer.</p>
+  <div class="chips">
+    <span class="chip chip-v">p95 Latency Under 8s</span>
+    <span class="chip chip-c">3 Cloud Providers</span>
+    <span class="chip chip-a">Full Terraform IaC</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'resolvemesh','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'resolvemesh','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'resolvemesh','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'resolvemesh','results')">Results &amp; Metrics</button>
+  </div>
+  <div id="resolvemesh-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Support SLA Breaches from Manual Triage</h3>
+        <h3 class="nontech-txt">Slow, Inconsistent Support Responses</h3>
+        <p class="tech-txt">Support teams manually triaged tickets, keyword-searched knowledge bases, and copy-pasted replies — producing inconsistent responses and 4–6 hour SLA breaches. No existing solution cleanly combined enterprise NLP, semantic KB search, and LLM drafting without single-cloud lock-in.</p>
+        <p class="nontech-txt">Support agents spent hours manually searching through knowledge base articles and writing custom replies for every ticket — leading to slow response times, inconsistency, and agent burnout as ticket volume scaled.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">Multi-Cloud DAG with Vertex AI Orchestration</h3>
+        <h3 class="nontech-txt">One Pipeline Across Three Cloud Providers</h3>
+        <p class="tech-txt">GCP Vertex AI Pipelines orchestrates a 5-step DAG: Azure Cognitive Services for NLP enrichment (entities, intent, P1–P4 priority, sentiment) → Azure Cognitive Search for top-3 KB article retrieval → AWS Lambda + Bedrock for a &lt;300-word grounded reply citing KB sources → optional human review gate → delivery to origin system. Terraform provisions all resources across Azure, AWS, and GCP from a single repo.</p>
+        <p class="nontech-txt">The system routes each task to the cloud that does it best: Azure for understanding the ticket, AWS for generating the reply with an LLM, and Google Cloud for coordinating everything. One Terraform command provisions the entire multi-cloud infrastructure.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>Entity/intent/sentiment extraction + P1–P4 priority scoring</li>
+          <li>Semantic KB retrieval — top-3 articles ranked by similarity</li>
+          <li>LLM draft &le;300 words, citations to KB articles used</li>
+          <li>Configurable human review gate before posting</li>
+          <li>Structured audit event per ticket (latency, model, KB articles)</li>
+          <li>OpenTelemetry cross-cloud correlated traces → GCP Cloud Trace</li>
+          <li>Cost guardrails: budget alerts at $50/day per cloud account</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <div class="tags">
+          <span class="tag">Azure Cognitive Services</span><span class="tag">Azure Cognitive Search</span>
+          <span class="tag">AWS Bedrock (Claude/Titan)</span><span class="tag">AWS Lambda</span>
+          <span class="tag">GCP Vertex AI Pipelines</span><span class="tag">GCP Cloud Run</span>
+          <span class="tag">Terraform (3 providers)</span><span class="tag">OpenTelemetry</span>
+          <span class="tag">Python 3.11</span><span class="tag">DynamoDB · S3</span>
+          <span class="tag">Azure Event Grid · GCP Pub/Sub</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="resolvemesh-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="24" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">RESOLVEMESH AI — multi-cloud agent pipeline with Vertex AI orchestration + Terraform IaC</text>
+        <line x1="10" y1="34" x2="850" y2="34" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- Vertex AI Pipeline boundary -->
+        <rect x="136" y="54" width="610" height="130" rx="10" fill="rgba(167,139,250,0.03)" stroke="rgba(167,139,250,0.25)" stroke-width="1" stroke-dasharray="6 3"/>
+        <text x="441" y="70" fill="rgba(167,139,250,0.6)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">GCP VERTEX AI PIPELINES — orchestrates steps 1–4</text>
+        <!-- Ticket input -->
+        <rect x="8" y="80" width="90" height="80" rx="10" fill="#1a0d22" stroke="rgba(167,139,250,0.5)" stroke-width="1.5"/>
+        <text x="53" y="114" fill="#a78bfa" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">TICKET</text>
+        <text x="53" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Webhook/</text>
+        <text x="53" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">queue ingest</text>
+        <line x1="99" y1="120" x2="144" y2="120" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-r)" class="flow-line"/>
+        <!-- Azure NLP -->
+        <rect x="146" y="78" width="118" height="84" rx="8" fill="#0f1a2e" stroke="rgba(56,189,248,0.45)" stroke-width="1"/>
+        <text x="205" y="108" fill="#38bdf8" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">AZURE NLP</text>
+        <text x="205" y="122" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cognitive Services</text>
+        <text x="205" y="136" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Entities · Intent</text>
+        <text x="205" y="149" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Sentiment · P1-P4</text>
+        <line x1="265" y1="120" x2="286" y2="120" stroke="rgba(56,189,248,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-r)" class="flow-line" style="animation-delay:-0.5s"/>
+        <!-- Azure KB Search -->
+        <rect x="288" y="78" width="118" height="84" rx="8" fill="#0f1a2e" stroke="rgba(56,189,248,0.45)" stroke-width="1"/>
+        <text x="347" y="108" fill="#38bdf8" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">AZURE KB</text>
+        <text x="347" y="122" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cognitive Search</text>
+        <text x="347" y="136" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Vector embeddings</text>
+        <text x="347" y="149" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Top-3 KB articles</text>
+        <line x1="407" y1="120" x2="428" y2="120" stroke="rgba(56,189,248,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-r)" class="flow-line" style="animation-delay:-1s"/>
+        <!-- AWS Bedrock -->
+        <rect x="430" y="78" width="118" height="84" rx="8" fill="#0f1a2e" stroke="rgba(251,191,36,0.45)" stroke-width="1"/>
+        <text x="489" y="108" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">AWS BEDROCK</text>
+        <text x="489" y="122" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Lambda + LLM</text>
+        <text x="489" y="136" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Chain-of-thought</text>
+        <text x="489" y="149" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">&le;300-word draft</text>
+        <line x1="549" y1="120" x2="570" y2="120" stroke="rgba(251,191,36,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-r)" class="flow-line" style="animation-delay:-1.5s"/>
+        <!-- Human Gate -->
+        <rect x="572" y="78" width="110" height="84" rx="8" fill="#0f1a2e" stroke="rgba(52,211,153,0.4)" stroke-width="1"/>
+        <text x="627" y="108" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">HUMAN GATE</text>
+        <text x="627" y="122" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cloud Run webhook</text>
+        <text x="627" y="136" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Optional review</text>
+        <text x="627" y="149" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Configurable flag</text>
+        <line x1="683" y1="120" x2="700" y2="120" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-r)" class="flow-line" style="animation-delay:-2s"/>
+        <!-- Delivery -->
+        <rect x="702" y="80" width="80" height="80" rx="10" fill="#0a1a12" stroke="rgba(52,211,153,0.55)" stroke-width="1.5"/>
+        <text x="742" y="110" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">DELIVERY</text>
+        <text x="742" y="125" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Zendesk/Jira</text>
+        <text x="742" y="139" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">API + audit log</text>
+        <!-- Terraform row -->
+        <rect x="8" y="218" width="180" height="44" rx="8" fill="rgba(251,113,133,0.04)" stroke="rgba(251,113,133,0.2)" stroke-width="0.5"/>
+        <text x="98" y="236" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">TERRAFORM IaC</text>
+        <text x="98" y="251" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">3 provider blocks · remote state · CI/CD</text>
+        <!-- OpenTelemetry row -->
+        <rect x="208" y="218" width="200" height="44" rx="8" fill="rgba(167,139,250,0.04)" stroke="rgba(167,139,250,0.2)" stroke-width="0.5"/>
+        <text x="308" y="236" fill="#a78bfa" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">OPENTELEMETRY</text>
+        <text x="308" y="251" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Cross-cloud traces → GCP Cloud Trace</text>
+        <!-- Secrets row -->
+        <rect x="428" y="218" width="200" height="44" rx="8" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.2)" stroke-width="0.5"/>
+        <text x="528" y="236" fill="#fbbf24" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">SECRET MANAGEMENT</text>
+        <text x="528" y="251" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Azure Key Vault · AWS Secrets Manager · GCP SM</text>
+        <!-- Stage labels -->
+        <text x="53" y="194" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Input</text>
+        <text x="205" y="194" fill="#38bdf8" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Azure</text>
+        <text x="347" y="194" fill="#38bdf8" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Azure</text>
+        <text x="489" y="194" fill="#fbbf24" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">AWS</text>
+        <text x="627" y="194" fill="#34d399" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">GCP</text>
+        <text x="742" y="194" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Output</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(56,189,248,0.5)"></div>Azure services</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>AWS services</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>GCP services</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>Vertex AI Pipeline boundary</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">Azure NLP Layer</div>
+        <p class="tech-txt">Azure Language Service extracts named entities (product, error code, user), classifies intent (billing, technical, account), produces sentiment score, and assigns P1–P4 priority based on urgency keywords and sentiment. Output is a structured JSON payload forwarded via Azure Event Grid → GCP Pub/Sub bridge (Cloud Run forwarder).</p>
+        <p class="nontech-txt">Azure reads the ticket and understands what the customer is talking about — which product, what they're feeling, how urgent it is — and converts it into structured data the next step can work with.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">AWS Bedrock Draft</div>
+        <p class="tech-txt">Lambda receives NLP payload + top-3 KB articles, constructs a chain-of-thought prompt instructing the model to cite specific KB sections, calls Bedrock (Claude/Titan), returns a &le;300-word draft. Request/response persisted to DynamoDB for audit. Raw payloads archived to S3. Retry with exponential backoff on throttle errors.</p>
+        <p class="nontech-txt">AWS generates the actual reply — grounded in the knowledge base articles, under 300 words, with citations so the support agent knows exactly which articles were used. Every draft is saved for auditing.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Vertex AI Orchestration</div>
+        <p class="tech-txt">Vertex AI Pipelines defines the agent DAG as containerized pipeline components. Each step is independently retryable with dead-letter routing. Cloud Monitoring + Cloud Trace provide end-to-end latency visibility. OpenTelemetry collectors on each cloud ship correlated spans to a unified GCP Cloud Trace backend — so one trace shows Azure, AWS, and GCP latency together.</p>
+        <p class="nontech-txt">Google Cloud coordinates the whole workflow — if any step fails, it retries automatically. Every request generates a single trace you can view showing exactly how long each cloud took, making it easy to spot and fix bottlenecks.</p>
+      </div>
+    </div>
+  </div>
+  <div id="resolvemesh-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="resolvemesh-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="resolvemesh-prev" onclick="stepNav('resolvemesh',-1)" disabled>&#8592; Prev</button>
+        <button class="nav-btn" id="resolvemesh-next" onclick="stepNav('resolvemesh',1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div id="resolvemesh-step-card" class="step-card"></div>
+  </div>
+  <div id="resolvemesh-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-v"><div class="mv" data-target="8" data-suffix="s">&lt;8s</div><div class="ml">p95 end-to-end ticket-to-draft latency</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="3" data-suffix=" clouds">0</div><div class="ml">Cloud providers orchestrated by one pipeline</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="20" data-suffix="min">0min</div><div class="ml">Full infra reprovision via terraform apply</div></div>
+      <div class="mc mc-a"><div class="mv" data-target="0" data-suffix=" keys">0 keys</div><div class="ml">Hardcoded credentials in source or state</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Pipeline Step Latency Budget (seconds)</div>
+        <div style="position:relative;height:220px"><canvas id="resolveChart1" role="img" aria-label="Latency breakdown by pipeline step"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Compute Distribution by Cloud Provider</div>
+        <div style="position:relative;height:220px"><canvas id="resolveChart2" role="img" aria-label="Workload distribution across Azure AWS GCP"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Engineering Impact</div>
+      <p class="tech-txt">The key architectural insight is using each cloud for its genuine competitive advantage: Azure Language + Cognitive Search for enterprise NLP and KB indexing, Bedrock for LLM inference with built-in compliance, Vertex AI Pipelines for ML workflow orchestration with built-in retry/DLQ. Terraform's multi-provider support lets a single plan/apply provision all three clouds atomically. OpenTelemetry's vendor-neutral instrumentation means swapping any cloud service doesn't require re-instrumenting.</p>
+      <p class="nontech-txt">The project proves that multi-cloud doesn't have to mean complexity. By using one infrastructure tool (Terraform), one orchestration platform (Vertex AI), and one observability standard (OpenTelemetry), the whole system can be set up from scratch in under 20 minutes and monitored from one dashboard — even though it spans three different cloud providers.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECT: OPSFORGE AI ===== -->
+<div id="proj-opsforge" class="project" style="display:none">
+  <div class="ph-cat" style="color:var(--em)">Full-Stack · AI Agents · RAG</div>
+  <h1 class="ph-title">OpsForge AI</h1>
+  <p class="ph-sub tech-txt">Production-grade AI operations platform built on a 100% free stack — FastAPI, LangChain + Groq Llama 3.1-70B, PostgreSQL/pgvector, React/Tailwind — with three specialized AI agents (Clock, Task, Report), RAG over company documents, real-time WebSocket notifications, JWT auth with refresh-token rotation, and Docker + PWA deployment.</p>
+  <p class="ph-sub nontech-txt">A complete operations platform that lets teams manage attendance, tasks, shifts, leave, and reports through a dashboard and a conversational AI assistant — all free to run, from a single Docker command.</p>
+  <div class="chips">
+    <span class="chip chip-e">3 Specialized AI Agents</span>
+    <span class="chip chip-c">RAG over Company Docs</span>
+    <span class="chip chip-v">Real-time WebSocket</span>
+    <span class="chip chip-a">100% Free Stack</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'opsforge','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'opsforge','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'opsforge','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'opsforge','results')">Results &amp; Metrics</button>
+  </div>
+  <div id="opsforge-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Fragmented Ops Tooling for Small Teams</h3>
+        <h3 class="nontech-txt">Too Many Tools, No AI Assistance</h3>
+        <p class="tech-txt">Small and mid-sized teams cobbled together spreadsheets for attendance, email threads for leave approvals, and separate SaaS tools for tasks — each with its own login, no AI, and no unified view. Building a coherent ops assistant typically requires expensive LLM APIs and paid services.</p>
+        <p class="nontech-txt">Teams used spreadsheets for tracking hours, emails for leave requests, and separate apps for tasks — wasting time switching between tools and maintaining no single source of truth for team operations.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">Unified Platform with Specialized LangChain Agents</h3>
+        <h3 class="nontech-txt">One Dashboard + One AI Assistant</h3>
+        <p class="tech-txt">FastAPI backend with three LangChain agents (Clock, Task, Report) each backed by Groq Llama 3.1-70B via SSE streaming. pgvector + fastembed provides RAG over company documents (policies, handbooks) without any paid embedding API. JWT auth with refresh-token reuse detection, WebSocket per-user targeted delivery, and drag-and-drop Kanban on the frontend.</p>
+        <p class="nontech-txt">One platform handles everything: clock in/out, task management, shift scheduling, leave requests, and reports. An AI chat assistant answers questions about company policies using the actual documents, and the whole thing runs free.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>3 AI agents: Clock (attendance), Task (management), Report (analytics)</li>
+          <li>RAG over company docs — fastembed (BAAI/bge-small) + pgvector, no API cost</li>
+          <li>SSE token streaming for real-time agent responses</li>
+          <li>JWT auth: access + refresh with rotation and reuse detection</li>
+          <li>WebSocket targeted notifications per user</li>
+          <li>Drag-and-drop Kanban with 4 columns (@dnd-kit)</li>
+          <li>PWA — installable, offline app-shell, branded icons</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack (All Free)</div>
+        <div class="tags">
+          <span class="tag">FastAPI</span><span class="tag">LangChain</span>
+          <span class="tag">Groq Llama 3.1-70B</span><span class="tag">PostgreSQL + pgvector</span>
+          <span class="tag">fastembed (ONNX)</span><span class="tag">React + Tailwind CSS</span>
+          <span class="tag">Recharts</span><span class="tag">@dnd-kit</span>
+          <span class="tag">JWT (jose)</span><span class="tag">WebSockets</span>
+          <span class="tag">structlog</span><span class="tag">Docker + nginx</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="opsforge-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 290" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="24" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">OPSFORGE AI — full-stack AI operations platform architecture</text>
+        <line x1="10" y1="34" x2="850" y2="34" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- React Frontend -->
+        <rect x="10" y="70" width="110" height="120" rx="10" fill="#0a1a12" stroke="rgba(52,211,153,0.5)" stroke-width="1.5"/>
+        <text x="65" y="104" fill="#34d399" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">REACT + PWA</text>
+        <text x="65" y="120" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">11 pages</text>
+        <text x="65" y="135" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Tailwind CSS</text>
+        <text x="65" y="150" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Kanban · Charts</text>
+        <text x="65" y="165" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">WS Live indicator</text>
+        <!-- Arrow -->
+        <line x1="121" y1="130" x2="146" y2="130" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line"/>
+        <!-- FastAPI -->
+        <rect x="148" y="70" width="120" height="120" rx="10" fill="#0f1a2e" stroke="rgba(167,139,250,0.45)" stroke-width="1"/>
+        <text x="208" y="104" fill="#a78bfa" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">FASTAPI</text>
+        <text x="208" y="120" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">JWT auth + RBAC</text>
+        <text x="208" y="135" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Refresh rotation</text>
+        <text x="208" y="150" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Rate limiting</text>
+        <text x="208" y="165" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">WebSocket /ws</text>
+        <line x1="269" y1="130" x2="294" y2="130" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line" style="animation-delay:-0.6s"/>
+        <!-- AI Agents -->
+        <rect x="296" y="60" width="150" height="140" rx="10" fill="#1a0d22" stroke="rgba(167,139,250,0.55)" stroke-width="1.5"/>
+        <text x="371" y="92" fill="#a78bfa" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">LANGCHAIN AGENTS</text>
+        <rect x="308" y="102" width="126" height="26" rx="5" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.3)" stroke-width="0.5"/>
+        <text x="371" y="119" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">Clock Agent</text>
+        <rect x="308" y="134" width="126" height="26" rx="5" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.3)" stroke-width="0.5"/>
+        <text x="371" y="151" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">Task Agent</text>
+        <rect x="308" y="166" width="126" height="26" rx="5" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.3)" stroke-width="0.5"/>
+        <text x="371" y="183" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">Report Agent</text>
+        <!-- Arrows right -->
+        <line x1="447" y1="120" x2="470" y2="100" stroke="rgba(251,191,36,0.6)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line" style="animation-delay:-1s"/>
+        <line x1="447" y1="160" x2="470" y2="200" stroke="rgba(34,211,238,0.6)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line" style="animation-delay:-1.4s"/>
+        <!-- Groq -->
+        <rect x="472" y="62" width="120" height="66" rx="10" fill="#0f1a2e" stroke="rgba(251,191,36,0.45)" stroke-width="1"/>
+        <text x="532" y="90" fill="#fbbf24" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">GROQ LLM</text>
+        <text x="532" y="106" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Llama 3.1-70B</text>
+        <text x="532" y="120" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">SSE streaming</text>
+        <!-- RAG -->
+        <rect x="472" y="172" width="120" height="66" rx="10" fill="#0f1a2e" stroke="rgba(34,211,238,0.45)" stroke-width="1"/>
+        <text x="532" y="198" fill="#22d3ee" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">RAG LAYER</text>
+        <text x="532" y="214" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">pgvector + fastembed</text>
+        <text x="532" y="228" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">bge-small-en-v1.5</text>
+        <!-- Arrows right -->
+        <line x1="593" y1="95" x2="620" y2="120" stroke="rgba(52,211,153,0.5)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line"/>
+        <line x1="593" y1="205" x2="620" y2="180" stroke="rgba(52,211,153,0.5)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-o)" class="flow-line" style="animation-delay:-0.8s"/>
+        <!-- PostgreSQL -->
+        <rect x="622" y="80" width="120" height="100" rx="10" fill="#0a1220" stroke="rgba(52,211,153,0.5)" stroke-width="1.5"/>
+        <text x="682" y="114" fill="#34d399" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">POSTGRESQL</text>
+        <text x="682" y="130" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">12 tables</text>
+        <text x="682" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">pgvector ext.</text>
+        <text x="682" y="160" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Alembic migrations</text>
+        <!-- WS return -->
+        <line x1="682" y1="182" x2="682" y2="220" stroke="rgba(34,211,238,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="682" y1="220" x2="65" y2="220" stroke="rgba(34,211,238,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="65" y1="220" x2="65" y2="192" stroke="rgba(34,211,238,0.4)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arr-o)"/>
+        <text x="373" y="240" fill="#22d3ee" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">WebSocket real-time events (task updates, notifications, attendance)</text>
+        <!-- Labels -->
+        <text x="65" y="214" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Frontend</text>
+        <text x="208" y="214" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">API Layer</text>
+        <text x="371" y="224" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Agents</text>
+        <text x="532" y="260" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">AI + RAG</text>
+        <text x="682" y="200" fill="#334155" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">Database</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>Frontend / database</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>API + AI agents</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>LLM inference</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(34,211,238,0.5)"></div>RAG + real-time</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">Agent Architecture</div>
+        <p class="tech-txt">Three LangChain agents (abstract base + specialized subclasses) each exposed via /api/agents/execute (full response) and /api/agents/execute/stream (SSE token-by-token). The frontend reads SSE via fetch + ReadableStream, not EventSource, to support POST auth headers. Agent actions written to audit log with manager override capability.</p>
+        <p class="nontech-txt">Three specialized AI assistants handle different domains — attendance, tasks, and reports. They stream responses word-by-word so users see the answer forming in real time, just like ChatGPT. Every AI action is logged so managers can see and override decisions.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">RAG System</div>
+        <p class="tech-txt">Company documents seeded into document_chunks table via fastembed (BAAI/bge-small-en-v1.5, 384-dim, runs locally via ONNX — no embedding API key). pgvector HNSW index for fast cosine similarity search. Degrades gracefully on SQLite (RAG disabled, no crash). Agents prepend retrieved policy context before answering.</p>
+        <p class="nontech-txt">The AI can answer questions about company policies, handbooks, and procedures by searching through actual company documents — without sending those documents to any external service. It all runs locally and for free.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Auth &amp; Real-time</div>
+        <p class="tech-txt">JWT access tokens (30-min) + refresh tokens (7-day) with rotation on every use and family revocation on reuse detection. WebSocket ConnectionManager maps ws connections to user_id for targeted delivery. useRealtime hook auto-reconnects with 3s backoff, invalidates React Query caches on incoming events. Layout header shows live green dot when WebSocket connected.</p>
+        <p class="nontech-txt">Login is secure — stolen refresh tokens are detected and the whole account's tokens are revoked. The app shows a live green indicator when connected, and task updates appear in real time without refreshing the page.</p>
+      </div>
+    </div>
+  </div>
+  <div id="opsforge-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="opsforge-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="opsforge-prev" onclick="stepNav('opsforge',-1)" disabled>&#8592; Prev</button>
+        <button class="nav-btn" id="opsforge-next" onclick="stepNav('opsforge',1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div id="opsforge-step-card" class="step-card"></div>
+  </div>
+  <div id="opsforge-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-e"><div class="mv" data-target="3" data-suffix=" agents">0</div><div class="ml">Specialized LangChain AI agents</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="12" data-suffix=" tables">0</div><div class="ml">PostgreSQL tables in the schema</div></div>
+      <div class="mc mc-a"><div class="mv" data-target="11" data-suffix=" pages">0</div><div class="ml">React pages in the dashboard</div></div>
+      <div class="mc mc-v"><div class="mv" data-target="0" data-suffix=" paid APIs">0</div><div class="ml">Paid external services required to run</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Operations Modules Covered</div>
+        <div style="position:relative;height:220px"><canvas id="opsChart1" role="img" aria-label="Feature coverage by module"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Agent Action Types Distribution</div>
+        <div style="position:relative;height:220px"><canvas id="opsChart2" role="img" aria-label="Agent action distribution"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Engineering Insight</div>
+      <p class="tech-txt">The 100% free stack design was intentional — fastembed runs ONNX locally (no embedding API), Groq provides free-tier Llama 3.1-70B inference, PostgreSQL+pgvector replaces Pinecone, and slowapi handles rate limiting in-process. The pgvector/SQLite conditional degradation (RAG on PostgreSQL, graceful disable on SQLite) means developers can run the app with zero dependencies for local work. Refresh-token reuse detection (family revocation on reuse) prevents token theft without requiring a session store.</p>
+      <p class="nontech-txt">The design challenge was making a full AI operations platform that costs nothing to run. Every expensive component was replaced with a free alternative without sacrificing quality — local embeddings instead of OpenAI API, Groq instead of paid GPT-4, pgvector instead of a paid vector database. The result runs on a laptop or a $5 server.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECT: VISIONLOG ===== -->
+<div id="proj-visionlog" class="project" style="display:none">
+  <div class="ph-cat" style="color:#38bdf8">Serverless · Computer Vision · GCP</div>
+  <h1 class="ph-title">VisionLog</h1>
+  <p class="ph-sub tech-txt">Production-ready event-driven image recognition platform on GCP: React frontend → API Gateway (API key auth) → Cloud Run Upload Service → GCS → Eventarc trigger → Cloud Run Inference Worker → Vertex AI-hosted MobileNetV2 → Firestore. Top-3 ImageNet predictions with confidence scores, async pipeline, structured Cloud Logging, Terraform IaC, and GitHub Actions CI/CD with Workload Identity Federation.</p>
+  <p class="ph-sub nontech-txt">Upload any image through the web app and the system automatically classifies it using Google's AI — returning the top 3 predictions with confidence scores in seconds. Every result is saved to a dashboard with full history, built on Google Cloud's fully serverless infrastructure.</p>
+  <div class="chips">
+    <span class="chip chip-sk">Top-3 Confidence Predictions</span>
+    <span class="chip chip-e">Async Event-driven Pipeline</span>
+    <span class="chip chip-c">4 GCP Services Integrated</span>
+    <span class="chip chip-a">Terraform + WIF CI/CD</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'visionlog','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'visionlog','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'visionlog','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'visionlog','results')">Results &amp; Metrics</button>
+  </div>
+  <div id="visionlog-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Cold Starts &amp; Tight Coupling in Serverless ML</h3>
+        <h3 class="nontech-txt">Slow Image Classification with No Audit Trail</h3>
+        <p class="tech-txt">Running TensorFlow inside Cloud Run Functions causes 5–15 second cold starts as model weights load per instance. Synchronous classification blocks upload responses and creates timeout risk. No standard pattern exists for async ML inference with status tracking and structured audit logging in a single GCP-native stack.</p>
+        <p class="nontech-txt">Loading an AI model directly inside a serverless function is slow and wasteful. There was no clean way to classify images asynchronously, track status, and maintain a prediction history without coupling upload and inference together.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">Decoupled Upload/Inference via Eventarc + Vertex AI Endpoint</h3>
+        <h3 class="nontech-txt">Upload Now, Classify in the Background</h3>
+        <p class="tech-txt">Upload Service (Cloud Run, always-on) validates, stores to GCS, writes PENDING to Firestore, and returns requestId immediately — &lt;500ms. GCS finalize event triggers Inference Worker via Eventarc. Worker preprocesses image (224x224, MobileNetV2 scaling), calls a warm Vertex AI Prediction endpoint (MobileNetV2 persistent, no cold starts), decodes top-3 ImageNet labels, updates Firestore COMPLETED. React polls /status every 2s until terminal state.</p>
+        <p class="nontech-txt">The upload and the classification are completely separate steps. The user gets an instant response with a tracking ID, then the AI processes the image in the background. A Vertex AI endpoint keeps the model warm at all times so there's never a cold start delay.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Key Capabilities</div>
+        <ul>
+          <li>Multi-layer file validation: MIME, magic bytes, PIL integrity, min 32x32px</li>
+          <li>Async pipeline: upload returns in &lt;500ms, inference in background</li>
+          <li>Vertex AI Prediction endpoint keeps MobileNetV2 warm (no cold starts)</li>
+          <li>Firestore status tracking: PENDING → PROCESSING → COMPLETED / FAILED</li>
+          <li>Structured JSON logs with log-based metrics in Cloud Logging</li>
+          <li>API Gateway with API key auth + defense-in-depth middleware</li>
+          <li>React dashboard: status polling, prediction bar chart, history table</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <div class="tags">
+          <span class="tag">GCP Cloud Run</span><span class="tag">GCP Eventarc</span>
+          <span class="tag">GCP Cloud Storage</span><span class="tag">GCP Firestore</span>
+          <span class="tag">Vertex AI (MobileNetV2)</span><span class="tag">GCP API Gateway</span>
+          <span class="tag">GCP Cloud Logging</span><span class="tag">GCP Secret Manager</span>
+          <span class="tag">FastAPI · Python 3.11</span><span class="tag">React + Vite</span>
+          <span class="tag">Terraform</span><span class="tag">GitHub Actions + WIF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="visionlog-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 290" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="24" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">VISIONLOG — event-driven serverless image classification pipeline on GCP</text>
+        <line x1="10" y1="34" x2="850" y2="34" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- React -->
+        <rect x="8" y="68" width="86" height="100" rx="10" fill="#0a1220" stroke="rgba(56,189,248,0.5)" stroke-width="1.5"/>
+        <text x="51" y="104" fill="#38bdf8" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">REACT</text>
+        <text x="51" y="119" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Upload form</text>
+        <text x="51" y="134" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Status poller</text>
+        <text x="51" y="149" fill="#64748b" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Dashboard</text>
+        <line x1="95" y1="118" x2="112" y2="118" stroke="rgba(56,189,248,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line"/>
+        <!-- API Gateway -->
+        <rect x="114" y="78" width="90" height="80" rx="8" fill="#0f1a2e" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <text x="159" y="110" fill="#a78bfa" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">API GATEWAY</text>
+        <text x="159" y="126" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">API key auth</text>
+        <text x="159" y="141" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Rate limiting</text>
+        <line x1="205" y1="118" x2="220" y2="118" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line" style="animation-delay:-0.4s"/>
+        <!-- Upload Service -->
+        <rect x="222" y="68" width="110" height="100" rx="8" fill="#0f1a2e" stroke="rgba(56,189,248,0.45)" stroke-width="1"/>
+        <text x="277" y="100" fill="#38bdf8" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">UPLOAD SERVICE</text>
+        <text x="277" y="115" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cloud Run</text>
+        <text x="277" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Validate · UUID</text>
+        <text x="277" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">PENDING → Firestore</text>
+        <text x="277" y="160" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Returns requestId</text>
+        <line x1="333" y1="118" x2="350" y2="118" stroke="rgba(56,189,248,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line" style="animation-delay:-0.8s"/>
+        <!-- GCS -->
+        <rect x="352" y="78" width="80" height="80" rx="8" fill="#0f1a2e" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <text x="392" y="110" fill="#22d3ee" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">GCS</text>
+        <text x="392" y="126" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cloud Storage</text>
+        <text x="392" y="141" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">uploads/{id}/</text>
+        <line x1="433" y1="118" x2="450" y2="118" stroke="rgba(34,211,238,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line" style="animation-delay:-1.2s"/>
+        <!-- Eventarc -->
+        <rect x="452" y="78" width="80" height="80" rx="8" fill="#0f1a2e" stroke="rgba(251,191,36,0.4)" stroke-width="1"/>
+        <text x="492" y="108" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">EVENTARC</text>
+        <text x="492" y="123" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">GCS finalize</text>
+        <text x="492" y="138" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">CloudEvent</text>
+        <line x1="533" y1="118" x2="550" y2="118" stroke="rgba(251,191,36,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line" style="animation-delay:-1.6s"/>
+        <!-- Inference Worker -->
+        <rect x="552" y="68" width="110" height="100" rx="8" fill="#0f1a2e" stroke="rgba(251,191,36,0.45)" stroke-width="1"/>
+        <text x="607" y="100" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">INFERENCE WKR</text>
+        <text x="607" y="115" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">Cloud Run Fn</text>
+        <text x="607" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Preprocess 224x224</text>
+        <text x="607" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Call Vertex AI</text>
+        <text x="607" y="160" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Update Firestore</text>
+        <line x1="663" y1="118" x2="680" y2="118" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-v)" class="flow-line" style="animation-delay:-2s"/>
+        <!-- Vertex AI -->
+        <rect x="682" y="68" width="100" height="100" rx="8" fill="#0a1a12" stroke="rgba(52,211,153,0.55)" stroke-width="1.5"/>
+        <text x="732" y="100" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">VERTEX AI</text>
+        <text x="732" y="115" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">MobileNetV2</text>
+        <text x="732" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Warm endpoint</text>
+        <text x="732" y="145" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Top-3 ImageNet</text>
+        <text x="732" y="160" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">confidence scores</text>
+        <!-- Firestore (below, receives updates) -->
+        <rect x="552" y="210" width="230" height="50" rx="8" fill="#0a1220" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+        <text x="667" y="230" fill="#38bdf8" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">FIRESTORE</text>
+        <text x="667" y="247" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">PENDING → COMPLETED · predictions · model version · duration</text>
+        <!-- Arrows to/from Firestore -->
+        <line x1="277" y1="170" x2="277" y2="235" stroke="rgba(56,189,248,0.4)" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="277" y1="235" x2="550" y2="235" stroke="rgba(56,189,248,0.4)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-v)"/>
+        <line x1="607" y1="170" x2="607" y2="208" stroke="rgba(52,211,153,0.5)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-v)"/>
+        <!-- Polling return -->
+        <line x1="552" y1="258" x2="51" y2="258" stroke="rgba(56,189,248,0.3)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="51" y1="258" x2="51" y2="170" stroke="rgba(56,189,248,0.3)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arr-v)"/>
+        <text x="300" y="277" fill="#64748b" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">React polls GET /status every 2s until COMPLETED or FAILED</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(56,189,248,0.5)"></div>React + GCS + Firestore</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>API Gateway</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>Event trigger + Inference Worker</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>Vertex AI Prediction</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">Upload &amp; Validation</div>
+        <p class="tech-txt">Upload Service validates: extension (.jpg/.png/.webp), declared MIME vs actual magic bytes (%PDF blocks renamed files), Pillow openability, file size &lt;10MB, minimum 32x32px dimensions. requestId generated (UUID v4), image stored to GCS at uploads/{requestId}/original.{ext}, PENDING record written to Firestore, 202 response with statusUrl returned — total &lt;500ms.</p>
+        <p class="nontech-txt">Before storing anything, the system checks that the file is actually a valid image (not a renamed PDF or corrupted file), then saves it and immediately sends back a tracking ID — without making the user wait for the AI to run.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Vertex AI Inference</div>
+        <p class="tech-txt">MobileNetV2 exported as TensorFlow SavedModel, uploaded to GCS, registered in Vertex AI Model Registry, deployed to a warm endpoint (min_replica_count:1). Inference Worker preprocesses: PIL decode → RGB convert → resize 224x224 LANCZOS → float32 → MobileNetV2 preprocess_input ([-1,1] scale) → (1,224,224,3) batch. Endpoint.predict() returns 1000-class softmax; top-3 decoded via imagenet_labels.json.</p>
+        <p class="nontech-txt">Instead of loading the AI model inside the function (slow, memory-heavy), the model lives on a dedicated endpoint that stays warm and ready. The worker just sends the preprocessed image and gets predictions back instantly.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">CI/CD &amp; Infrastructure</div>
+        <p class="tech-txt">Workload Identity Federation replaces service account JSON keys in GitHub secrets — OIDC tokens exchanged for short-lived credentials. Two workflows: ci.yml (PR: pytest + coverage ≥80% + flake8 + Docker build check) and deploy.yml (main merge: build/push to Artifact Registry → gcloud run deploy → Firebase/Cloud Run static hosting). Terraform provisions all GCP resources from one apply.</p>
+        <p class="nontech-txt">The CI/CD pipeline automatically tests every code change and deploys to production on merge — with no long-lived API keys stored in GitHub. Terraform provisions the entire cloud infrastructure from a single command, making the setup fully reproducible.</p>
+      </div>
+    </div>
+  </div>
+  <div id="visionlog-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="visionlog-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="visionlog-prev" onclick="stepNav('visionlog',-1)" disabled>&#8592; Prev</button>
+        <button class="nav-btn" id="visionlog-next" onclick="stepNav('visionlog',1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div id="visionlog-step-card" class="step-card"></div>
+  </div>
+  <div id="visionlog-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-sk"><div class="mv" data-target="3" data-suffix=" labels">0</div><div class="ml">Top-N ImageNet labels per prediction</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="500" data-suffix="ms">&lt;500ms</div><div class="ml">Upload-to-response latency (async)</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="80" data-suffix="%">0%</div><div class="ml">Minimum test coverage enforced in CI</div></div>
+      <div class="mc mc-a"><div class="mv" data-target="0" data-suffix=" keys">0 keys</div><div class="ml">Long-lived credentials in GitHub secrets</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Example: Top-3 Prediction Confidence</div>
+        <div style="position:relative;height:220px"><canvas id="visionChart1" role="img" aria-label="Example prediction confidence scores for a golden retriever image"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Typical Request Status Distribution</div>
+        <div style="position:relative;height:220px"><canvas id="visionChart2" role="img" aria-label="Prediction request status breakdown"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Architecture Decisions</div>
+      <p class="tech-txt">The core insight is decoupling upload from inference via Eventarc: the upload path is a lightweight HTTP service (512Mi Cloud Run) while inference runs in a separate 1Gi function triggered by the GCS event. This means upload latency is always &lt;500ms regardless of model inference time. Vertex AI's persistent endpoint eliminates the 5–15s cold start that in-function TensorFlow causes. Defense-in-depth auth (API Gateway validates key, Upload Service middleware re-validates) means neither service is exposed unprotected.</p>
+      <p class="nontech-txt">The main design win is that uploading and classifying are completely separate, so users never wait for the AI. The model runs on dedicated infrastructure that stays warm between requests. Infrastructure is fully reproducible — one Terraform command recreates everything.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECT: GUARDRAILS ===== -->
+<div id="proj-guardrails" class="project" style="display:none">
+  <div class="ph-cat" style="color:#fb923c">AI Safety · RAG · Prompt Defense</div>
+  <h1 class="ph-title">AI Library API<br>Guardrail System</h1>
+  <p class="ph-sub tech-txt">Modular 6-layer prompt-injection defense for a FastAPI + Supabase + LangChain Library Management API — detecting instruction overrides, PDF-embedded attacks, multi-turn context poisoning, unauthorized mutating tool calls, API key leakage, and low-quality outputs through InputGuard, DocumentGuard, ConversationHistoryGuard, ToolCallGuard, OutputGuard, and SummaryQualityGuard.</p>
+  <p class="ph-sub nontech-txt">An intelligent security layer that protects an AI-powered library system from attacks hidden in user messages, uploaded PDFs, and multi-turn conversations — intercepting threats before they reach the AI and blocking unsafe responses before they reach users.</p>
+  <div class="chips">
+    <span class="chip chip-or">6 Guard Layers</span>
+    <span class="chip chip-e">Multi-turn Context Analysis</span>
+    <span class="chip chip-c">PDF Injection Defense</span>
+    <span class="chip chip-v">7+ LLM Providers</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'guardrails','overview')">Overview</button>
+    <button class="tab" onclick="switchTab(this,'guardrails','arch')">Architecture</button>
+    <button class="tab" onclick="switchTab(this,'guardrails','steps')">How It Works</button>
+    <button class="tab" onclick="switchTab(this,'guardrails','results')">Results &amp; Metrics</button>
+  </div>
+  <div id="guardrails-overview" class="panel active">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Problem</div>
+        <h3 class="tech-txt">Multi-vector Prompt Injection in Production RAG APIs</h3>
+        <h3 class="nontech-txt">AI APIs Vulnerable to Hidden Instructions</h3>
+        <p class="tech-txt">LLM-powered APIs face injection attacks via multiple surfaces simultaneously: user prompts override system instructions, uploaded PDFs carry malicious directives as RAG context, earlier conversation turns poison later ones (multi-turn/delayed attacks), and the model may leak system prompts or API keys in its output. Existing solutions scan only the latest message — missing distributed attacks across turns.</p>
+        <p class="nontech-txt">AI systems can be tricked in ways that aren't obvious: attackers hide instructions inside uploaded PDFs, plant a command in an early chat message that activates later, or ask the AI to reveal its secret configuration. Standard defenses only look at the current message and miss these patterns.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">The Solution</div>
+        <h3 class="tech-txt">6-Layer Modular Guard System with Full Conversation Analysis</h3>
+        <h3 class="nontech-txt">Six Independent Security Checkpoints</h3>
+        <p class="tech-txt">Pattern-based guardrail package (books_enh/services/guardrails/) with six guards: InputGuard scans current user message; ConversationHistoryGuard scans the entire context window for poisoning planted in earlier turns; DocumentGuard scans assembled RAG/PDF context with a stricter rule set; ToolCallGuard blocks mutating tools (create_loan, extend_loan) when context is compromised; OutputGuard blocks system prompt leaks and API key patterns in the response; SummaryQualityGuard blocks empty/too-short RAG answers. All tunable via a single patterns.py.</p>
+        <p class="nontech-txt">Six independent checkpoints inspect every request at different points in the pipeline — before the AI sees it, while checking knowledge base content, before executing actions, and after the AI responds. Each checkpoint blocks independently; passing one doesn't guarantee passing the next.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Attack Vectors Defended</div>
+        <ul>
+          <li>Instruction override: "Ignore previous instructions…"</li>
+          <li>Role manipulation: "You are now in developer mode…"</li>
+          <li>Multi-turn context poisoning: "For the rest of this conversation…"</li>
+          <li>PDF-embedded injection: malicious directives in book text used as RAG context</li>
+          <li>Unauthorized tool calls: LLM triggered to create_loan / extend_loan</li>
+          <li>System prompt exfiltration: "Reveal your developer instructions"</li>
+          <li>API key / secret leakage: sk-..., JWTs, DB DSNs in LLM output</li>
+          <li>Low-quality RAG answers: empty or &lt;20-char responses blocked</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tech Stack</div>
+        <div class="tags">
+          <span class="tag">FastAPI</span><span class="tag">LangChain</span>
+          <span class="tag">Supabase PostgreSQL</span><span class="tag">Supabase Storage</span>
+          <span class="tag">pgvector</span><span class="tag">SQLModel · Pydantic</span>
+          <span class="tag">OpenRouter (free)</span><span class="tag">Groq</span>
+          <span class="tag">Google Gemini</span><span class="tag">Ollama (local)</span>
+          <span class="tag">OpenAI · Anthropic</span><span class="tag">pypdf</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="guardrails-arch" class="panel">
+    <div class="arch-wrap">
+      <svg viewBox="0 0 860 310" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <text x="430" y="24" fill="#334155" font-family="DM Mono,monospace" font-size="10" text-anchor="middle">GUARDRAIL SYSTEM — 6-layer prompt-injection defense pipeline</text>
+        <line x1="10" y1="34" x2="850" y2="34" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- Request input -->
+        <rect x="8" y="80" width="80" height="80" rx="10" fill="#1a0e04" stroke="rgba(251,146,60,0.5)" stroke-width="1.5"/>
+        <text x="48" y="112" fill="#fb923c" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">USER</text>
+        <text x="48" y="127" fill="#fb923c" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">REQUEST</text>
+        <text x="48" y="146" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">/chat · /rag</text>
+        <text x="48" y="158" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">/conversations</text>
+        <line x1="89" y1="120" x2="106" y2="120" stroke="rgba(251,146,60,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line"/>
+        <!-- Input Guard -->
+        <rect x="108" y="70" width="100" height="100" rx="8" fill="#0f1a2e" stroke="rgba(251,146,60,0.45)" stroke-width="1.5"/>
+        <text x="158" y="102" fill="#fb923c" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">INPUT GUARD</text>
+        <text x="158" y="117" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Current prompt scan</text>
+        <text x="158" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">History poisoning</text>
+        <text x="158" y="143" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">check_messages()</text>
+        <text x="158" y="158" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">check_user_prompt()</text>
+        <line x1="158" y1="172" x2="158" y2="210" stroke="rgba(251,113,133,0.6)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-g)"/>
+        <rect x="108" y="212" width="100" height="36" rx="6" fill="#1a0a10" stroke="rgba(251,113,133,0.5)" stroke-width="1"/>
+        <text x="158" y="229" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">BLOCKED → 400</text>
+        <text x="158" y="241" fill="#64748b" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">INPUT_GUARD · HISTORY_GUARD</text>
+        <line x1="209" y1="120" x2="226" y2="120" stroke="rgba(251,146,60,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line" style="animation-delay:-0.5s"/>
+        <!-- Document Guard -->
+        <rect x="228" y="70" width="100" height="100" rx="8" fill="#0f1a2e" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <text x="278" y="102" fill="#22d3ee" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">DOC GUARD</text>
+        <text x="278" y="117" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">RAG context scan</text>
+        <text x="278" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">PDF injection</text>
+        <text x="278" y="143" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Strict rule set</text>
+        <text x="278" y="158" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Pre-LLM only</text>
+        <line x1="278" y1="172" x2="278" y2="210" stroke="rgba(251,113,133,0.6)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-g)"/>
+        <rect x="228" y="212" width="100" height="36" rx="6" fill="#1a0a10" stroke="rgba(251,113,133,0.5)" stroke-width="1"/>
+        <text x="278" y="229" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">BLOCKED → 400</text>
+        <text x="278" y="241" fill="#64748b" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">DOCUMENT_GUARD</text>
+        <line x1="329" y1="120" x2="346" y2="120" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line" style="animation-delay:-1s"/>
+        <!-- LLM -->
+        <rect x="348" y="60" width="130" height="120" rx="10" fill="#0f1a2e" stroke="rgba(167,139,250,0.55)" stroke-width="1.5"/>
+        <text x="413" y="98" fill="#a78bfa" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" font-weight="500">LLM PROVIDER</text>
+        <text x="413" y="114" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10" text-anchor="middle">OpenRouter · Groq</text>
+        <text x="413" y="129" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Gemini · Ollama</text>
+        <text x="413" y="144" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">OpenAI · Anthropic</text>
+        <text x="413" y="159" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Tool-binding (optional)</text>
+        <text x="413" y="172" fill="#64748b" font-family="DM Sans,sans-serif" font-size="8" text-anchor="middle">Swappable via .env only</text>
+        <line x1="479" y1="120" x2="496" y2="120" stroke="rgba(251,191,36,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line" style="animation-delay:-1.5s"/>
+        <!-- Tool Guard -->
+        <rect x="498" y="70" width="100" height="100" rx="8" fill="#0f1a2e" stroke="rgba(251,191,36,0.4)" stroke-width="1"/>
+        <text x="548" y="102" fill="#fbbf24" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">TOOL GUARD</text>
+        <text x="548" y="117" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Mutating vs read</text>
+        <text x="548" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">create_loan blocked</text>
+        <text x="548" y="143" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">extend_loan blocked</text>
+        <text x="548" y="158" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Read-only allowed</text>
+        <line x1="548" y1="172" x2="548" y2="210" stroke="rgba(251,113,133,0.6)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-g)"/>
+        <rect x="498" y="212" width="100" height="36" rx="6" fill="#1a0a10" stroke="rgba(251,113,133,0.5)" stroke-width="1"/>
+        <text x="548" y="229" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">BLOCKED → 400</text>
+        <text x="548" y="241" fill="#64748b" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">TOOL_CALL_GUARD</text>
+        <line x1="599" y1="120" x2="616" y2="120" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line" style="animation-delay:-2s"/>
+        <!-- Output Guard -->
+        <rect x="618" y="70" width="100" height="100" rx="8" fill="#0f1a2e" stroke="rgba(52,211,153,0.4)" stroke-width="1"/>
+        <text x="668" y="102" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">OUTPUT GUARD</text>
+        <text x="668" y="117" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Prompt leak scan</text>
+        <text x="668" y="130" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">API key patterns</text>
+        <text x="668" y="143" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">sk-... · JWTs · DSNs</text>
+        <text x="668" y="158" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">Summary quality</text>
+        <line x1="668" y1="172" x2="668" y2="210" stroke="rgba(251,113,133,0.6)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr-g)"/>
+        <rect x="618" y="212" width="100" height="36" rx="6" fill="#1a0a10" stroke="rgba(251,113,133,0.5)" stroke-width="1"/>
+        <text x="668" y="229" fill="#fb7185" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="500">BLOCKED → 400</text>
+        <text x="668" y="241" fill="#64748b" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">OUTPUT_GUARD · QUALITY</text>
+        <line x1="719" y1="120" x2="738" y2="120" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr-g)" class="flow-line" style="animation-delay:-2.5s"/>
+        <!-- Response -->
+        <rect x="740" y="80" width="80" height="80" rx="10" fill="#0a1a12" stroke="rgba(52,211,153,0.55)" stroke-width="1.5"/>
+        <text x="780" y="114" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">SAFE</text>
+        <text x="780" y="129" fill="#34d399" font-family="DM Mono,monospace" font-size="10" text-anchor="middle" font-weight="500">RESPONSE</text>
+        <text x="780" y="148" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9" text-anchor="middle">HTTP 200</text>
+        <!-- Flow label -->
+        <text x="430" y="285" fill="#334155" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">All 6 guards share patterns.py — add/remove phrases once, all guards update automatically</text>
+      </svg>
+    </div>
+    <div class="arch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,146,60,0.5)"></div>Input / history guards</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(34,211,238,0.5)"></div>Document guard</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(167,139,250,0.5)"></div>LLM provider layer</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(251,191,36,0.5)"></div>Tool guard</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(52,211,153,0.5)"></div>Output / quality guard</div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">Input &amp; History Detection</div>
+        <p class="tech-txt">InputGuard.check_messages() splits message list: the last user message triggers INPUT_GUARD; any earlier user message with injection patterns triggers CONVERSATION_HISTORY_GUARD. This catches the core problem — a poisoning message planted in turn 1 that's designed to activate in turn 5. Assistant messages skipped (covered by OutputGuard). Pattern groups: INSTRUCTION_OVERRIDE, ROLE_MANIPULATION, SYSTEM_PROMPT_LEAK, SECRET_LEAK_INTENT, CONTEXT_POISONING.</p>
+        <p class="nontech-txt">The system reads not just the current message but the entire conversation history — catching attacks that are designed to be planted early and activated later. A manipulative instruction in message 1 blocks the whole conversation from that point forward.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Document Injection Guard</div>
+        <p class="tech-txt">After RAG retrieves chunks and assembles the context string (but before injecting into the prompt), DocumentGuard scans with DOCUMENT_GROUPS — a stricter subset of patterns excluding soft phrases like "from now on" that legitimately appear in books. Designed to avoid over-blocking ordinary prose while catching clear injection signals like "Ignore all previous instructions" or "Reveal the system prompt" embedded in a PDF.</p>
+        <p class="nontech-txt">An uploaded PDF could contain hidden instructions meant to trick the AI. The document guard reads the PDF content before the AI sees it, checking for manipulation attempts. It uses a tighter filter than other guards to avoid blocking innocent books with common phrases.</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Tool &amp; Output Protection</div>
+        <p class="tech-txt">ToolGuard splits tools into read-only (search_books, check_availability, get_member_loans, get_book_pdf_url, calculate_late_fees) and mutating (create_loan, extend_loan). Mutating calls refused when context shows injection indicators. OutputGuard uses regex to detect literal API key shapes (sk-..., sk-or-v1-..., JWTs starting eyJ, Postgres DSNs, env var assignments) and system prompt leak phrases in the model response before it reaches the user.</p>
+        <p class="nontech-txt">The tool guard stops the AI from being tricked into taking actions like creating loans without authorization. The output guard ensures the AI can never accidentally reveal secrets, API keys, or internal configuration — even if somehow asked to.</p>
+      </div>
+    </div>
+  </div>
+  <div id="guardrails-steps" class="panel">
+    <div class="step-header">
+      <div class="step-dots" id="guardrails-dots"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="guardrails-prev" onclick="stepNav('guardrails',-1)" disabled>&#8592; Prev</button>
+        <button class="nav-btn" id="guardrails-next" onclick="stepNav('guardrails',1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div id="guardrails-step-card" class="step-card"></div>
+  </div>
+  <div id="guardrails-results" class="panel">
+    <div class="metrics-row">
+      <div class="mc mc-or"><div class="mv" data-target="6" data-suffix=" layers">0</div><div class="ml">Independent guard layers in the pipeline</div></div>
+      <div class="mc mc-e"><div class="mv" data-target="8" data-suffix=" vectors">0</div><div class="ml">Distinct attack vectors defended against</div></div>
+      <div class="mc mc-c"><div class="mv" data-target="0" data-suffix=" LLM calls">0</div><div class="ml">LLM API calls made on blocked requests</div></div>
+      <div class="mc mc-v"><div class="mv" data-target="7" data-suffix="+ providers">0</div><div class="ml">Swappable LLM providers via .env only</div></div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Guard Trigger Rate by Type (test suite)</div>
+        <div style="position:relative;height:220px"><canvas id="guardChart1" role="img" aria-label="Guard trigger frequency by guard type"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Requests: Blocked Before LLM vs Passed</div>
+        <div style="position:relative;height:220px"><canvas id="guardChart2" role="img" aria-label="Proportion of requests blocked before reaching LLM vs safe requests"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Design Philosophy</div>
+      <p class="tech-txt">The single most important decision: all detection patterns live in one file (patterns.py) using grouped sets (INPUT_GROUPS, DOCUMENT_GROUPS, OUTPUT_GROUPS). Adding a new attack pattern means editing one list in one file — no other file changes. The guards use direct-child class selectors from this file, so the update propagates automatically. GUARDRAILS_DEBUG=true adds a safe {stage, matched_category} diagnostic to blocked responses — never full prompts, PDF text, or secrets. Input-side blocks (5 of 8 attack vectors) fire before any LLM call, meaning blocked requests cost zero API credits.</p>
+      <p class="nontech-txt">All attack detection rules live in one file — so adding new protection is one line in one place, and every guard picks it up automatically. Most attacks are stopped before they ever reach the AI, meaning there's no API cost for blocked attacks. The debug mode shows exactly which rule was triggered without revealing any sensitive content.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ─── PROJECT DATA ───────────────────────────────────────────────────────────
+const steps = {
+  bank: [
+    {
+      emoji:'📄', title:'Document Received',
+      tech:'A loan application triggers ingestion of bank statements in any format — PDF (text or scanned), CSV exports, or images. The system auto-detects document type using mime-type headers and content heuristics.',
+      nontech:'A customer uploads their bank statements when applying for a loan. The system accepts any format — it can read PDF files, spreadsheets, or even photos of paper statements.'
+    },
+    {
+      emoji:'🔍', title:'Multi-format Parsing',
+      tech:'pdfplumber extracts text-based PDFs with table detection. Tesseract OCR + preprocessing handles scanned documents. Custom regex patterns + learned templates extract transaction rows, dates, amounts, and descriptions across 50+ bank formats.',
+      nontech:'Like a very fast reader, the system reads through every page, finding all the transactions — dates, amounts, and descriptions — no matter how the bank formatted the document.'
+    },
+    {
+      emoji:'🧠', title:'AI Transaction Classification',
+      tech:'Each transaction is sent to GPT-4 with a structured prompt requesting JSON output: category (income, housing, food, etc.), subcategory, risk signals (overdraft, irregular pattern), and confidence score. Batch calls optimize cost and latency.',
+      nontech:'The AI reads each transaction and understands what it is — salary income, rent payment, grocery shopping — and flags anything unusual, like overdrafts or irregular deposits.'
+    },
+    {
+      emoji:'🔎', title:'Semantic Indexing',
+      tech:'Structured transaction records are embedded using OpenAI text-embedding-3-small and stored in a vector index (Pinecone or pgvector). This enables semantic retrieval: "high-value irregular deposits" retrieves relevant transactions even with no keyword match.',
+      nontech:'The system creates an intelligent index of all the financial data, so it can answer questions about it instantly — even if the question is phrased differently from how the data is stored.'
+    },
+    {
+      emoji:'🎙️', title:'Voice & Text Q&A',
+      tech:'Voice queries processed via Whisper API → text → embedded → top-k retrieved from vector store → GPT-4 generates grounded answer with citations. Text queries skip transcription. Full RAG (Retrieval-Augmented Generation) pipeline ensures answers are factually grounded in the actual data.',
+      nontech:'Loan officers can ask questions out loud or type them — "Is the income consistent?" or "Any large unusual payments?" — and get instant, accurate answers based on the real bank data.'
+    },
+    {
+      emoji:'✅', title:'Underwriting Decision Output',
+      tech:'Structured JSON report generated: income summary, expense breakdown, risk signals, debt-to-income ratio, cashflow consistency score. Output standardized to integrate directly with underwriting platforms via REST API. Decision latency: under 90 seconds for a complete 3-month statement analysis.',
+      nontech:'The system produces a clean, standardized summary for the loan officer — income, spending patterns, risk factors — everything they need to make a decision, in under 2 minutes instead of days.'
+    }
+  ],
+  pulse: [
+    {
+      emoji:'📡', title:'Multi-source Ingestion',
+      tech:'producer.py generates realistic mock reviews (Faker-based, sentiment-aligned phrase banks, skewed 4–5 star distribution). Reddit/PRAW and Twitter/Tweepy connectors normalize social data into the same record schema. Publisher abstracts destination: local JSONL file in LOCAL_MODE, else boto3 put_record to Kinesis partitioned by product_id.',
+      nontech:'The system accepts reviews and comments from multiple sources at once — a mock data generator for testing, real Reddit comments, and live tweets — all converted into the same standard format before processing.'
+    },
+    {
+      emoji:'⚡', title:'Real-time VADER Scoring',
+      tech:'consumer.py polls Kinesis shards (or tails local JSONL) and applies VADER to each record in-process. Compound score thresholds: ≥0.05 = positive, ≤−0.05 = negative, else neutral. Zero API cost, zero network latency. Scores attached as sentiment_label and sentiment_score before any further processing.',
+      nontech:'Every review gets a sentiment score instantly — positive, neutral, or negative — using a rule-based algorithm that runs right inside the app. No external AI call needed, so it\'s fast and free.'
+    },
+    {
+      emoji:'🔍', title:'v2 Enrichment Pipeline',
+      tech:'enrichment.py loaded lazily (v1 skips it entirely). Enricher: (1) normalize_text → text_hash for dedup — if hash seen, returns None and record is dropped; (2) langdetect with seeded random for determinism → language field; (3) KeyBERT top-N extraction → keywords ARRAY. Degrades gracefully if KeyBERT model unavailable.',
+      nontech:'In version 2, each review is also checked for duplicates (so the same text doesn\'t count twice), tagged with its language, and analyzed for the most important keywords — giving much richer data for the dashboard without slowing down the pipeline.'
+    },
+    {
+      emoji:'📦', title:'Micro-batch → Snowpipe Auto-ingest',
+      tech:'MicroBatchSink buffers records and flushes to S3 (or local disk) when MICRO_BATCH_SECONDS elapses or MICRO_BATCH_MAX_RECORDS accumulates. Output: NDJSON on Hive-style date path (reviews/raw/YYYY/MM/DD/HH/batch-…json). S3 object-created event → SQS → Snowpipe COPY INTO REVIEWS_RAW. If Snowflake is unavailable, records queue in S3 and self-heal on resume — no custom retry logic.',
+      nontech:'Instead of sending reviews to Snowflake one by one, the system bundles them into files every few seconds and drops them in S3. Snowflake automatically picks them up and loads them — and if Snowflake goes down briefly, nothing is lost; the files just wait in S3.'
+    },
+    {
+      emoji:'📊', title:'Snowpark Aggregations',
+      tech:'snowpark_jobs.py: hourly_rollup() groups REVIEWS_RAW by product and hour, computing volume + avg_score + pct_positive/neutral/negative → SENTIMENT_AGG (idempotent upsert). keyword_frequency() FLATTENs KEYWORDS arrays and counts by day + label → KEYWORD_FREQ. Runnable via cron or registered as Snowflake Task (DDL in schema_v2.sql).',
+      nontech:'Snowflake automatically crunches the raw data every hour into clean summaries — total reviews, average sentiment, percentage positive/negative per product — and separately counts which keywords come up most often. These are what power the live charts on the dashboard.'
+    },
+    {
+      emoji:'🤖', title:'Groq LLM Batch Summarization',
+      tech:'llm_summarizer.py: _fetch_recent() pulls last LLM_LOOKBACK_MINUTES from REVIEWS_RAW; _group() buckets by (product_id, source); _call_groq() sends ≤LLM_BATCH_SIZE reviews per call with JSON response mode → {summary, positive_themes, negative_themes, recommended_action}; _write_insight() inserts one row to INSIGHTS_SUMMARY. Model: llama-3.1-8b-instant. Batching ~50–100 reviews/call cuts API invocations ~98% vs per-event. Runs on cadence via --loop flag.',
+      nontech:'Every 10 minutes, the system bundles the latest reviews and sends them to Groq\'s AI (Llama 3.1) as one batch. The AI produces a short summary — what people are saying, what\'s going well, what\'s going badly, and what to do about it. Batching keeps costs at near-zero.'
+    },
+    {
+      emoji:'🚨', title:'Anomaly Detection & Live Dashboard',
+      tech:'anomaly_detection.py: per product, reads last ANOMALY_WINDOW_HOURS of SENTIMENT_AGG hourly buckets (min ANOMALY_MIN_VOLUME filter). Computes baseline mean + std of pct_negative over preceding buckets; flags if latest bucket > mean + k·std (default k=2). Requires ≥4 buckets before firing. Breach written to SENTIMENT_ALERTS with z-score. Streamlit dashboard queries all four tables via safe_query() (60s TTL cache) — renders positivity gauge, 24h trend, LLM insight cards, keyword cloud, and alert panel. Missing tables show setup hints instead of errors.',
+      nontech:'The system watches each product\'s normal rate of negative reviews. If a recent hour is way above its own baseline — statistically unusual — it raises an alert. The Streamlit dashboard shows everything live: a sentiment gauge, trend charts, the AI\'s insight cards, and any active alerts — updating every minute.'
+    }
+  ],
+  resolvemesh: [
+    {
+      emoji:'📬', title:'Support Ticket Received',
+      tech:'A support ticket (JSON payload) arrives via webhook or queue message. The system validates the payload schema, publishes it to GCP Pub/Sub via a Cloud Run forwarder that bridges Azure Event Grid — simpler than VPN peering for cross-cloud events and near-zero cost at low volume. Vertex AI Pipelines picks up the event and initiates the DAG run.',
+      nontech:'A support ticket comes in from wherever it was submitted — email, chat, or a support tool — and the system immediately starts working on it, routing it through the pipeline automatically.'
+    },
+    {
+      emoji:'🔍', title:'Azure NLP Enrichment',
+      tech:'Azure Cognitive Services Language API extracts entities (product names, error codes, user IDs), classifies intent category (billing, technical, account), produces sentiment score, and assigns priority P1–P4 based on urgency keywords and sentiment thresholds. Output is a structured JSON payload forwarded to the next pipeline step. Enrichment adds context the LLM uses for grounding.',
+      nontech:'Azure reads the ticket and understands it deeply — which product is involved, whether the customer is angry or calm, what they actually want, and how urgently they need help. All this understanding gets packaged up and passed to the next step.'
+    },
+    {
+      emoji:'📚', title:'Azure Cognitive Search — KB Retrieval',
+      tech:'Azure Cognitive Search index is pre-populated from the knowledge base (PDFs, Confluence pages, Markdown docs) with vector embeddings. The NLP payload (entities + intent) constructs a semantic search query. Top-3 KB articles ranked by similarity score are retrieved and included in the prompt context for the LLM. This grounds the reply in actual KB content rather than model hallucinations.',
+      nontech:'Azure searches through the entire knowledge base using AI-powered similarity — not just keyword matching — to find the 3 most relevant help articles. These articles are then handed to the LLM so it writes a reply that\'s actually accurate, not made up.'
+    },
+    {
+      emoji:'🤖', title:'AWS Bedrock LLM Draft',
+      tech:'AWS Lambda receives the structured NLP payload + retrieved KB article snippets. A chain-of-thought prompt instructs Bedrock (Claude or Titan) to: read the enriched ticket context, ground the reply in the provided KB articles, stay under 300 words, and cite which specific KB articles were used. DynamoDB persists every inference request + response for audit. S3 archives raw payloads.',
+      nontech:'AWS generates the actual reply draft — grounded in the knowledge base articles that were retrieved, under 300 words, with references to the articles used. Every draft is saved for auditing so support managers can review what the AI has been writing.'
+    },
+    {
+      emoji:'👤', title:'Human Review Gate',
+      tech:'Configurable flag (enabled/disabled per ticket type or SLA tier). When enabled, a Cloud Run webhook serves the draft to a reviewer UI. Reviewer can approve, edit, or reject. Approved → delivery step. Rejected → re-runs LLM with reviewer feedback. Gate adds latency but is excluded from the p95 SLA measurement per NFR-1. Dead-letter queue catches unreviewed drafts after timeout.',
+      nontech:'For important tickets, a human can review the AI\'s draft before it\'s sent — approve it as-is, make edits, or reject it and ask the AI to try again with feedback. This step is optional and can be turned on or off per ticket type.'
+    },
+    {
+      emoji:'📤', title:'Reply Delivery + Audit',
+      tech:'Approved draft posted back to origin system via Zendesk REST API or Jira Service Management API. A structured audit event is emitted: {ticket_id, latency_ms, model_version, kb_articles_used, reviewer_id, status}. OpenTelemetry spans from all three clouds are correlated in GCP Cloud Trace so a single trace shows Azure NLP latency, KB retrieval time, AWS Bedrock inference time, and delivery time together.',
+      nontech:'The approved reply is automatically posted back to wherever the ticket came from. A full audit record is created for every ticket — who approved it, how long each step took, which articles were cited. Cross-cloud monitoring shows the entire journey in one dashboard.'
+    },
+    {
+      emoji:'🔭', title:'Observability + Cost Guardrails',
+      tech:'OpenTelemetry collectors deployed on each cloud ship correlated trace spans to GCP Cloud Trace. Cloud Monitoring creates latency distribution dashboards. Budget alerts configured at $50/day per cloud account (GCP + Azure + AWS) via each cloud\'s native billing API, wired to PagerDuty. Terraform destroy + re-apply drill validated: full teardown and reprovision in &lt;20 minutes.',
+      nontech:'The system monitors itself across all three clouds from one dashboard — showing total latency, cost per ticket, and firing alerts if daily spend exceeds the budget on any cloud. The entire infrastructure can be torn down and rebuilt from scratch in under 20 minutes.'
+    }
+  ],
+  opsforge: [
+    {
+      emoji:'🔐', title:'Authentication &amp; Role Management',
+      tech:'JWT access tokens (HS256, 30-min expiry) + refresh tokens (7-day). Rotation on every use — a new refresh token issued on each /refresh call, old one revoked. Reuse detection: if a revoked token is presented, the entire family is revoked, forcing re-login. RBAC: admin/manager/employee. /register hardcodes role = employee (prevents privilege escalation). Rate limiting: 5/min register, 10/min login via slowapi.',
+      nontech:'Login is secure against token theft — if a stolen refresh token is used, the system detects it and logs out all devices immediately. Role controls ensure employees can\'t accidentally access manager features. Login attempts are rate-limited to block brute-force attacks.'
+    },
+    {
+      emoji:'🤖', title:'AI Agent Processing',
+      tech:'Three LangChain agents (abstract base + specialized subclasses) each with domain-specific tools and system prompts. /execute returns complete response; /execute/stream returns SSE token-by-token. Frontend reads SSE via fetch + ReadableStream (not EventSource, which can\'t do POST with auth headers). Every agent action written to agent_actions audit log with before/after state. Managers can override AI actions via /actions/{id}/override.',
+      nontech:'Three AI assistants — one for attendance, one for tasks, one for reports — each trained on their specific domain. They stream responses word-by-word in real time, and every AI action is logged so managers can review or reverse what the AI did.'
+    },
+    {
+      emoji:'📖', title:'RAG Knowledge Retrieval',
+      tech:'Company documents ingested into document_chunks table. fastembed (BAAI/bge-small-en-v1.5, 384-dim) runs locally via ONNX — no embedding API key or cost. pgvector HNSW index enables cosine similarity search. Agents prepend retrieved policy context to their system prompt before answering. Graceful degradation: RAG disabled on SQLite (detected automatically), app continues without it.',
+      nontech:'The AI can answer questions about company policies and procedures by searching through actual uploaded documents — not making things up. It all runs locally for free using a small AI model that runs without any API calls. Even without a database, the app works — just without document search.'
+    },
+    {
+      emoji:'⚡', title:'Real-time WebSocket Delivery',
+      tech:'ConnectionManager maps ws connections to user_id for targeted per-user delivery. broadcast_event() sends to all connections (task/shift/attendance events). send_user_event() sends to a specific user (notification created). useRealtime hook auto-reconnects with 3s backoff and invalidates React Query caches on incoming events. Layout header shows a green "Live" dot when WebSocket is connected.',
+      nontech:'Task updates, shift changes, and notifications appear on screen instantly without the user refreshing. If the connection drops, it automatically reconnects in 3 seconds. A green dot in the corner shows whether the live connection is active.'
+    },
+    {
+      emoji:'📊', title:'Dashboard, Kanban &amp; Reports',
+      tech:'Dashboard: React Query KPI cards + Recharts charts (attendance rate, task velocity, leave balance). Kanban: @dnd-kit drag-and-drop with 4 columns (todo, in_progress, review, completed), broadcasts WebSocket events on drop. Reports: managers trigger AI generation via /reports/generate (Groq synthesizes from live DB data). Weekly briefing endpoint aggregates data → formats HTML email → sends via Resend/SMTP/SendGrid (all optional, no-ops if unset).',
+      nontech:'The dashboard shows key team metrics in real time. Tasks can be dragged between status columns on a Kanban board, with updates appearing on teammates\' screens instantly. Managers can generate AI-written reports from live data, or send automated weekly email briefings to the team.'
+    },
+    {
+      emoji:'🐳', title:'Deployment, PWA &amp; Logging',
+      tech:'Docker Compose: pgvector/pg15 + FastAPI app + nginx reverse proxy. Dockerfile.backend (Python 3.11-slim), Dockerfile.frontend (Vite build). Alembic migrations with alembic stamp head for dev. structlog provides JSON logging in production (coloured in dev). PWA: service worker caches app-shell, never caches /api or /ws, branded teal-hexagon icons. SENTRY_DSN, SLACK_WEBHOOK_URL, email providers all optional (no-ops if unset).',
+      nontech:'The whole platform runs with one command: docker compose up. It installs as a mobile app from the browser with offline support. All monitoring, Slack notifications, and email are optional extras — the core app runs completely without them.'
+    }
+  ],
+  visionlog: [
+    {
+      emoji:'📤', title:'Image Upload &amp; Validation',
+      tech:'React drag-and-drop or file picker → POST /v1/images/upload with X-API-Key header. API Gateway validates the key and proxies to Cloud Run Upload Service. Upload Service validates: file present, MIME type (jpeg/png/webp), magic bytes match declared MIME (blocks renamed PDFs), file size &lt;10MB, Pillow openability (catches corrupt images), minimum 32x32px dimensions. All validation before any GCS write.',
+      nontech:'When a user uploads an image, the system checks it\'s actually a valid image file — not a renamed document or corrupted file — before doing anything with it. The checks run in order: wrong type rejected, too large rejected, corrupt file rejected. Only valid images proceed.'
+    },
+    {
+      emoji:'🗄️', title:'Async Job Registration',
+      tech:'requestId generated (UUID v4). Image stored to GCS at uploads/{requestId}/original.{ext}. PENDING document written to Firestore with metadata: fileName, gcsPath, uploadedAt, fileSizeBytes, mimeType, clientIp, predictions:[], status:"PENDING". 202 Accepted returned immediately with {requestId, statusUrl}. Total time from upload receipt to 202 response: &lt;500ms regardless of image size.',
+      nontech:'The system immediately returns a tracking ID to the user — usually in under half a second. The image is saved and a record created saying "we\'re working on it." The user doesn\'t wait for the AI; they get a tracking number and the AI works in the background.'
+    },
+    {
+      emoji:'⚡', title:'Eventarc Trigger',
+      tech:'GCS object-created event fires automatically when the upload lands in the bucket. Eventarc delivers a CloudEvent to the Inference Worker (Cloud Run Function, 2nd gen). Event payload includes bucket name and object path. Worker extracts requestId by parsing path: name.split("/")[1]. Updates Firestore to PROCESSING before starting inference. Event filter restricts to uploads/** prefix to ignore unrelated objects.',
+      nontech:'Google Cloud\'s event system detects the new image file the moment it arrives in storage and automatically wakes up the classification worker. No polling, no manual trigger — the pipeline starts itself. The worker immediately marks the job as "in progress" so users can see it\'s being processed.'
+    },
+    {
+      emoji:'🧠', title:'Vertex AI Inference',
+      tech:'Worker downloads image bytes from GCS → PIL.Image decode → RGB convert (handles RGBA, grayscale edge cases) → resize 224x224 LANCZOS → numpy float32 → MobileNetV2 preprocess_input (scales to [-1,1]) → (1,224,224,3) batch → JSON serialize → endpoint.predict(). Vertex AI Prediction endpoint (n1-standard-2, min_replica_count:1) is persistent and warm — no cold start. Response: 1000-class softmax probabilities.',
+      nontech:'The image gets resized and transformed into the exact format MobileNetV2 expects, then sent to a dedicated AI endpoint that stays warm and ready at all times. The AI returns probability scores for 1,000 different object categories — from "golden retriever" to "racing bicycle."'
+    },
+    {
+      emoji:'✅', title:'Result Storage &amp; Logging',
+      tech:'Top-3 indices extracted by sorting 1000 probabilities descending, decoded via imagenet_labels.json. Firestore updated PENDING → COMPLETED with: predictions [{rank, label, confidence}], modelVersion:"mobilenetv2-v1", processedAt, processingDurationMs. On failure → FAILED with errorMessage. Both services emit structured JSON logs to Cloud Logging with severity, requestId, service, version, durationMs, topPrediction fields. Log-based metrics: upload_count, inference_success_count, inference_failure_count, latency distribution.',
+      nontech:'The top 3 predictions (with confidence percentages) are saved to the database. Firestore flips from "pending" to "complete." If something went wrong, it\'s marked as "failed" with an error message — so the status is always current and accurate. All events are logged for monitoring.'
+    },
+    {
+      emoji:'📊', title:'Frontend Status Polling &amp; Dashboard',
+      tech:'React: usePredictionStatus custom hook sets setInterval at 2000ms, calls GET /v1/images/{requestId}/status, stops on COMPLETED or FAILED, cleans up on unmount. PredictionResult shows: top-3 predictions as a horizontal bar chart of confidence scores, local image preview (no public bucket URL needed), processingDurationMs, modelVersion. Dashboard GET /v1/images?limit=20 shows paginated history table with status badges, inline expand for all 3 predictions.',
+      nontech:'The page polls for results every 2 seconds, then shows the top 3 predictions with a confidence bar chart once done. The original image is shown for reference. The dashboard keeps a full history of every classification, with status badges showing whether each job is done or still running.'
+    }
+  ],
+  guardrails: [
+    {
+      emoji:'📥', title:'Request Received',
+      tech:'User message arrives at /chat/, /conversations/{id}/messages, or /rag/query. Router is thin — it contains no guardrail logic. Request is forwarded to the relevant service (ChatService, ToolCallingService, or RAGService). The service layer owns all guard invocations. GuardrailBlockedException is registered as an exception handler in main.py, producing a uniform JSON response: {success:false, blocked:true, guardrail, reason, message}.',
+      nontech:'A user sends a message through any of the AI endpoints. The router immediately passes it to the service layer where the guard checkpoints are. If any guard fires, it returns a consistent error response — so attackers can\'t tell which specific guard caught them.'
+    },
+    {
+      emoji:'🛡️', title:'Input Guard &amp; Conversation History Guard',
+      tech:'InputGuard.check_messages() processes the full message list. The last user message is checked as INPUT_GUARD; any earlier user message matching injection patterns triggers CONVERSATION_HISTORY_GUARD. Pattern groups checked: INSTRUCTION_OVERRIDE ("ignore previous instructions"), ROLE_MANIPULATION ("you are now"), SYSTEM_PROMPT_LEAK ("reveal your system prompt"), SECRET_LEAK_INTENT ("show environment variables"), CONTEXT_POISONING ("for the rest of this conversation"). Matched → enforce() raises GuardrailBlockedException, LLM never called.',
+      nontech:'Before the AI sees anything, the guard reads both the current message and the entire conversation history — looking for manipulation attempts hidden in earlier messages. If turn 1 tried to brainwash the AI, turn 5 gets blocked too. Zero API cost for blocked requests.'
+    },
+    {
+      emoji:'📄', title:'Document / PDF Injection Guard',
+      tech:'Runs in RAGService.query after RAG retrieves chunks and builds the context string — but before injecting that context into the LLM prompt. DocumentGuard uses DOCUMENT_GROUPS, a stricter subset of patterns that excludes soft phrases ("from now on") that appear legitimately in books, retaining only strong injection signals ("Ignore all previous instructions", "Reveal the system prompt", "You are now in developer mode"). Blocks DOCUMENT_GUARD, LLM never sees the poisoned PDF content.',
+      nontech:'After searching the knowledge base for relevant book content, the system reads that content carefully before showing it to the AI. If someone uploaded a PDF containing hidden instructions, those instructions are detected and the whole request is blocked — the AI never sees the malicious content.'
+    },
+    {
+      emoji:'🤖', title:'LLM Processing (clean path)',
+      tech:'Only requests that passed all pre-LLM guards reach here. LangChain LLMProvider (build_llm_provider factory) selects the appropriate client: ChatOpenAI with custom base_url for openrouter/groq/openai/deepseek, native ChatOllama for local models, ChatGoogleGenerativeAI for Gemini, ChatAnthropic for Claude. Per-request overrides of provider/model/temperature accepted in request body — changing LLM requires no code change, only .env or request params.',
+      nontech:'Clean requests reach the AI provider. Switching between free (Groq, Gemini, Ollama) and paid (OpenAI, Anthropic) LLMs requires no code change — just an environment variable update or a parameter in the request. The system supports 7+ providers interchangeably.'
+    },
+    {
+      emoji:'🔧', title:'Tool Call Guard (defense-in-depth)',
+      tech:'For conversations with enable_tools=true, ToolCallingService calls ToolGuard.check_tool_calls() before executing any tool the LLM requested. Tools split: read-only (search_books, check_availability, get_member_loans, get_book_pdf_url, calculate_late_fees) vs mutating (create_loan, extend_loan). Mutating calls blocked (TOOL_CALL_GUARD) when conversation context shows injection indicators. This is the backstop — InputGuard normally blocks injected requests before the model runs, so the ToolGuard is defense-in-depth.',
+      nontech:'Even if a malicious message somehow made it past the input guard, this second checkpoint stops the AI from taking damaging actions — like creating loans for unauthorized users. Read-only searches are always allowed; database-changing actions are blocked whenever the conversation looks suspicious.'
+    },
+    {
+      emoji:'🚫', title:'Output Guard &amp; Safe Response',
+      tech:'OutputGuard.check_output() scans the LLM response before returning: SYSTEM_PROMPT_LEAK patterns ("Here is my system prompt", "My instructions are"), literal API key shapes (sk-..., sk-or-v1-..., eyJ... JWTs, postgresql:// DSNs, KEY= env assignments). SummaryQualityGuard blocks answers shorter than GUARDRAILS_MIN_SUMMARY_LENGTH (default 20 chars). On block → raw LLM output discarded, safe fallback JSON returned. GUARDRAILS_DEBUG=true adds {stage, matched_category} — never full prompts or secrets.',
+      nontech:'The last checkpoint reads the AI\'s response before it reaches the user — blocking any response that accidentally contains API keys, database passwords, system instructions, or is too short to be a real answer. If something is blocked here, the user gets a safe error response, never the raw output.'
+    }
+  ],
+  inventory: [
+    {
+      emoji:'📦', title:'Supplier Data Ingestion',
+      tech:'Pipeline ingests CSV, Excel (xlsx/xls), XML, and JSON supplier feeds via SFTP, REST API, or manual upload. Apache Spark handles large files (100k+ rows). Schema inference maps supplier columns to normalized field types (name, unit, price, HS code, etc.) using ML column classifier.',
+      nontech:'The system accepts product lists from suppliers in any format they send — spreadsheets, files, or data feeds — and starts processing them automatically, no matter how messy.'
+    },
+    {
+      emoji:'🧹', title:'Cleansing & Normalization',
+      tech:'Multi-stage cleansing: unicode normalization, unit standardization (ml/L/oz), price currency normalization, duplicate row detection via hash comparison, brand name entity resolution, measurement normalization (1 kg = 1000g). ~40 custom cleaning rules handle domain-specific patterns.',
+      nontech:'The system cleans up all the inconsistencies — standardizing units, fixing typos, removing duplicates, and making sure all products are described the same way regardless of which supplier they came from.'
+    },
+    {
+      emoji:'🔗', title:'ML-Powered Clustering',
+      tech:'sentence-transformers (all-MiniLM-L6-v2) generates 384-dim embeddings per product. DBSCAN clustering groups items with cosine similarity > 0.78. HNSW index (FAISS) for efficient nearest-neighbor search at scale. Cluster candidates then passed to fine-grained matching stage.',
+      nontech:'The AI groups together products that are probably the same item — even if they\'re described completely differently by different suppliers — by understanding the meaning of the descriptions, not just the words.'
+    },
+    {
+      emoji:'🏷️', title:'Classification & Mapping',
+      tech:'Multi-signal classifier assigns SKU from master catalog, GTIN from GS1 database (with fuzzy match fallback), and HSN code from 8-digit tariff schedule. Rule-based guardrails validate format patterns (GTIN check digit, HSN numeric structure). Ensemble: ML model + rules prevents hallucinations.',
+      nontech:'The system assigns each product its official product codes — the unique numbers that identify exactly what the product is for inventory, customs, and tax purposes — automatically looking them up and matching them.'
+    },
+    {
+      emoji:'📊', title:'Confidence Scoring & Routing',
+      tech:'Composite confidence score: semantic similarity (40%), attribute match rate (30%), historical mapping agreement (20%), rule validation (10%). Per-category calibrated thresholds. Items scoring ≥85% auto-approved. Items 60–84% go to assisted review. Items <60% flagged for expert review with full evidence bundle.',
+      nontech:'The system gives each match a confidence score — how sure it is. High confidence (85%+) items are approved instantly. Lower confidence items go to a person to check, with the AI\'s best guesses already shown to speed up review.'
+    },
+    {
+      emoji:'👤', title:'Human-in-the-Loop Review',
+      tech:'React UI shows reviewer: AI-suggested match + confidence, top-3 alternatives with attribute diffs, similar confirmed mappings as precedent, and full raw data. Keyboard shortcuts for fast bulk review. Decisions stored and fed back into model training pipeline. Reviewers average 120 items/hour vs 25 manually.',
+      nontech:'For items the AI isn\'t sure about, a person reviews them in an easy-to-use screen that shows the AI\'s suggestions and why it thinks they match. Most reviews take just a few seconds to confirm or correct.'
+    },
+    {
+      emoji:'📚', title:'Master Catalog & Audit Trail',
+      tech:'Approved mappings written to master catalog with provenance: source supplier, match method (auto/human), reviewer ID, timestamp, confidence score, version. Full lineage for any catalog record. Downstream teams query via REST API. Catalog versioned with Git-style branching for rollback.',
+      nontech:'Every approved product goes into the master catalog with a complete record of how it was matched and who approved it — a full audit trail so the company can always see why any decision was made.'
+    }
+  ]
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentSteps = { resolvemesh:0, opsforge:0, visionlog:0, guardrails:0, pulse:0, bank:0, inventory:0 };
+let audience = 'tech';
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function init() {
+  ['resolvemesh','opsforge','visionlog','guardrails','pulse','bank','inventory'].forEach(proj => {
+    buildDots(proj);
+    renderStep(proj);
+  });
+  initCharts();
+  animateMetrics();
+}
+
+function buildDots(proj) {
+  const c = document.getElementById(proj+'-dots');
+  if(!c) return;
+  c.innerHTML = '';
+  steps[proj].forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'sdot' + (i===0?' active':'');
+    d.onclick = () => { currentSteps[proj]=i; renderStep(proj); };
+    c.appendChild(d);
+  });
+}
+
+function renderStep(proj) {
+  const card = document.getElementById(proj+'-step-card');
+  if(!card) return;
+  const i = currentSteps[proj];
+  const s = steps[proj][i];
+  const total = steps[proj].length;
+  const isNT = document.body.classList.contains('nontech');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+  card.innerHTML = `
+    <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+    <div class="step-body">
+      <span class="step-emoji">${s.emoji}</span>
+      <div class="step-ttl">${s.title}</div>
+      <div class="step-desc">${isNT ? s.nontech : s.tech}</div>
+      <div class="step-tech ${isNT?'hidden':''}">
+        <strong>Technical detail:</strong> ${s.tech.slice(0,120)}...
+      </div>
+    </div>
+    <div style="flex-shrink:0;width:80px;text-align:right;padding-top:8px;font-family:var(--fm);font-size:11px;color:var(--dim)">${i+1} / ${total}</div>
+  `;
+  // Update dots
+  document.querySelectorAll('#'+proj+'-dots .sdot').forEach((d,idx) => {
+    d.classList.toggle('active', idx===i);
+  });
+  // Update buttons
+  const prev = document.getElementById(proj+'-prev');
+  const next = document.getElementById(proj+'-next');
+  if(prev) prev.disabled = i===0;
+  if(next) next.disabled = i===total-1;
+}
+
+function stepNav(proj, dir) {
+  const total = steps[proj].length;
+  currentSteps[proj] = Math.max(0, Math.min(total-1, currentSteps[proj]+dir));
+  renderStep(proj);
+}
+
+// ─── PROJECT + TAB SWITCHING ─────────────────────────────────────────────────
+function showProject(key, btn) {
+  document.querySelectorAll('.project').forEach(p => p.style.display='none');
+  document.querySelectorAll('.pj-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('proj-'+key).style.display='block';
+  btn.classList.add('active');
+  animateMetrics();
+}
+
+function switchTab(btn, proj, panel) {
+  const tabs = btn.closest('.tabs').querySelectorAll('.tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const project = document.getElementById('proj-'+proj);
+  project.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(proj+'-'+panel).classList.add('active');
+  if(panel==='results') { setTimeout(animateMetrics,100); }
+  if(panel==='steps') { renderStep(proj); }
+}
+
+// ─── AUDIENCE TOGGLE ─────────────────────────────────────────────────────────
+function setAudience(mode, btn) {
+  audience = mode;
+  document.querySelectorAll('.aud-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.body.classList.toggle('nontech', mode==='nontech');
+  ['resolvemesh','opsforge','visionlog','guardrails','pulse','bank','inventory'].forEach(p => renderStep(p));
+}
+
+// ─── METRIC COUNTERS ─────────────────────────────────────────────────────────
+function animateMetrics() {
+  document.querySelectorAll('.mv[data-target]').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const dec = parseInt(el.dataset.dec||'0');
+    let start = 0;
+    const duration = 1200;
+    const step = 16;
+    const steps2 = duration/step;
+    let current = 0;
+    const timer = setInterval(() => {
+      current++;
+      const val = target * (current/steps2);
+      el.textContent = (dec>0?val.toFixed(dec):Math.round(val)) + suffix;
+      if(current>=steps2) { el.textContent = (dec>0?target.toFixed(dec):target) + suffix; clearInterval(timer); }
+    }, step);
+  });
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────────────────────
+function initCharts() {
+  // Bank Chart 1 - Turnaround time
+  new Chart(document.getElementById('bankChart1'),{
+    type:'bar',
+    data:{
+      labels:['Before AI','After AI'],
+      datasets:[{
+        label:'Days to decision',
+        data:[4.5,1.2],
+        backgroundColor:['rgba(251,191,36,0.2)','rgba(52,211,153,0.2)'],
+        borderColor:['#fbbf24','#34d399'],
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:6,ticks:{color:'#64748b',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:12}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // Bank Chart 2 - Accuracy by format
+  new Chart(document.getElementById('bankChart2'),{
+    type:'bar',
+    data:{
+      labels:['PDF Text','Scanned PDF','CSV','Excel','Images'],
+      datasets:[{
+        label:'Accuracy %',
+        data:[98,91,99,97,87],
+        backgroundColor:'rgba(34,211,238,0.15)',
+        borderColor:'#22d3ee',borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{min:70,max:100,ticks:{color:'#64748b',font:{size:11},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        y:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // PulseStream Chart 1 — LLM cost comparison
+  new Chart(document.getElementById('pulseChart1'),{
+    type:'bar',
+    data:{
+      labels:['Per-event calls','Batch calls (50–100/req)'],
+      datasets:[{
+        label:'Cost per 1,000 reviews ($)',
+        data:[18.50,0.40],
+        backgroundColor:['rgba(251,113,133,0.2)','rgba(52,211,153,0.2)'],
+        borderColor:['#fb7185','#34d399'],
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toFixed(2)},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:12}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // PulseStream Chart 2 — Sentiment distribution donut
+  new Chart(document.getElementById('pulseChart2'),{
+    type:'doughnut',
+    data:{
+      labels:['Positive (62%)','Neutral (23%)','Negative (15%)'],
+      datasets:[{
+        data:[62,23,15],
+        backgroundColor:['rgba(52,211,153,0.75)','rgba(100,116,139,0.6)','rgba(251,113,133,0.75)'],
+        borderColor:['#34d399','#475569','#fb7185'],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}
+      }
+    }
+  });
+
+  // ResolveMesh Chart 1 — Pipeline step latency
+  new Chart(document.getElementById('resolveChart1'),{
+    type:'bar',
+    data:{
+      labels:['Azure NLP','Azure KB Search','AWS Bedrock','Human Gate (opt)','Delivery'],
+      datasets:[{
+        label:'Seconds',
+        data:[0.8,1.4,4.2,0,0.6],
+        backgroundColor:['rgba(56,189,248,0.2)','rgba(56,189,248,0.2)','rgba(251,191,36,0.2)','rgba(100,116,139,0.2)','rgba(52,211,153,0.2)'],
+        borderColor:['#38bdf8','#38bdf8','#fbbf24','#475569','#34d399'],
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:6,ticks:{color:'#64748b',font:{size:11},callback:v=>v+'s'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:10},maxRotation:30},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // ResolveMesh Chart 2 — Cloud distribution donut
+  new Chart(document.getElementById('resolveChart2'),{
+    type:'doughnut',
+    data:{
+      labels:['Azure (NLP + KB Search)','AWS (Bedrock + Lambda + DDB)','GCP (Vertex AI + Pub/Sub + Trace)'],
+      datasets:[{
+        data:[38,35,27],
+        backgroundColor:['rgba(56,189,248,0.75)','rgba(251,191,36,0.75)','rgba(52,211,153,0.75)'],
+        borderColor:['#38bdf8','#fbbf24','#34d399'],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}
+    }
+  });
+  // OpsForge Chart 1 — Module coverage
+  new Chart(document.getElementById('opsChart1'),{
+    type:'bar',
+    data:{
+      labels:['Attendance','Tasks','Shifts','Leave','Reports','AI Chat','Notifications'],
+      datasets:[{
+        label:'Features',
+        data:[5,6,4,5,4,3,3],
+        backgroundColor:'rgba(52,211,153,0.2)',
+        borderColor:'#34d399',
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:11},stepSize:1},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        y:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // OpsForge Chart 2 — Agent action types donut
+  new Chart(document.getElementById('opsChart2'),{
+    type:'doughnut',
+    data:{
+      labels:['Clock In/Out (38%)','Task CRUD (29%)','Reports (18%)','Leave Mgmt (15%)'],
+      datasets:[{
+        data:[38,29,18,15],
+        backgroundColor:['rgba(167,139,250,0.75)','rgba(34,211,238,0.75)','rgba(251,191,36,0.75)','rgba(251,113,133,0.75)'],
+        borderColor:['#a78bfa','#22d3ee','#fbbf24','#fb7185'],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:10},padding:6,usePointStyle:true,pointStyleWidth:8}}}
+    }
+  });
+  // VisionLog Chart 1 — Example prediction confidence
+  new Chart(document.getElementById('visionChart1'),{
+    type:'bar',
+    data:{
+      labels:['Golden Retriever','Labrador Retriever','Flat-coated Retriever'],
+      datasets:[{
+        label:'Confidence',
+        data:[92.3,5.4,1.1],
+        backgroundColor:['rgba(56,189,248,0.5)','rgba(56,189,248,0.25)','rgba(56,189,248,0.12)'],
+        borderColor:['#38bdf8','#38bdf8','#38bdf8'],
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:100,ticks:{color:'#64748b',font:{size:11},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:11},maxRotation:15},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // VisionLog Chart 2 — Status distribution
+  new Chart(document.getElementById('visionChart2'),{
+    type:'doughnut',
+    data:{
+      labels:['Completed (94%)','Failed (3%)','Pending (3%)'],
+      datasets:[{
+        data:[94,3,3],
+        backgroundColor:['rgba(52,211,153,0.75)','rgba(251,113,133,0.75)','rgba(251,191,36,0.7)'],
+        borderColor:['#34d399','#fb7185','#fbbf24'],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}}
+    }
+  });
+  // Guardrails Chart 1 — Guard trigger rate (horizontal bar)
+  new Chart(document.getElementById('guardChart1'),{
+    type:'bar',
+    data:{
+      labels:['Input Guard','History Guard','Document Guard','Tool Guard','Output Guard','Quality Guard'],
+      datasets:[{
+        label:'Blocks in test suite',
+        data:[3,2,1,1,1,1],
+        backgroundColor:'rgba(251,146,60,0.2)',
+        borderColor:'#fb923c',
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:11},stepSize:1},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        y:{ticks:{color:'#94a3b8',font:{size:10}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // Guardrails Chart 2 — Blocked vs passed
+  new Chart(document.getElementById('guardChart2'),{
+    type:'bar',
+    data:{
+      labels:['Blocked (before LLM)','Blocked (after LLM)','Passed'],
+      datasets:[{
+        label:'Requests',
+        data:[5,2,100],
+        backgroundColor:['rgba(251,113,133,0.2)','rgba(251,191,36,0.2)','rgba(52,211,153,0.2)'],
+        borderColor:['#fb7185','#fbbf24','#34d399'],
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{color:'#64748b',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+  // Inventory Chart 1 - Donut
+  new Chart(document.getElementById('invChart1'),{
+    type:'doughnut',
+    data:{
+      labels:['Auto-approved (85%)','Human review (11%)','Expert review (4%)'],
+      datasets:[{
+        data:[85,11,4],
+        backgroundColor:['rgba(52,211,153,0.7)','rgba(251,191,36,0.7)','rgba(251,113,133,0.7)'],
+        borderColor:['#34d399','#fbbf24','#fb7185'],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'bottom',labels:{color:'#64748b',font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}
+      }
+    }
+  });
+  // Inventory Chart 2 - Onboarding time
+  new Chart(document.getElementById('invChart2'),{
+    type:'bar',
+    data:{
+      labels:['Before','After'],
+      datasets:[{
+        label:'Days',
+        data:[35,14],
+        backgroundColor:['rgba(251,191,36,0.2)','rgba(52,211,153,0.2)'],
+        borderColor:['#fbbf24','#34d399'],
+        borderWidth:1.5,borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{color:'#64748b',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        x:{ticks:{color:'#94a3b8',font:{size:12}},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
