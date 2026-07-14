@@ -1255,11 +1255,25 @@ class Component extends DCLogic {
 
   componentDidMount() {
     const v = this.videoRef.current;
-    if (v) {
-      v.muted = true;
-      const p = v.play();
-      if (p && p.catch) p.catch(() => {});
-    }
+    const vb = this.videoRefB.current;
+    // iOS Safari needs the literal attributes (React sets properties only)
+    [v, vb].forEach((el) => {
+      if (!el) return;
+      el.muted = true;
+      el.setAttribute('muted', '');
+      el.setAttribute('playsinline', '');
+      el.setAttribute('webkit-playsinline', '');
+    });
+    const tryPlay = () => {
+      if (v && v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+    };
+    tryPlay();
+    // Low Power Mode / autoplay-blocked fallback: start on first touch or scroll
+    this.kickPlay = () => { tryPlay(); window.removeEventListener('touchstart', this.kickPlay); window.removeEventListener('scroll', this.kickPlay); };
+    window.addEventListener('touchstart', this.kickPlay, { passive: true });
+    window.addEventListener('scroll', this.kickPlay, { passive: true });
+    document.addEventListener('visibilitychange', tryPlay);
+    this.tryPlayVis = tryPlay;
     this.setupCrossfade();
     this.applyGrain();
     import('./details-data.js').then((m) => { this.stepsData = m.steps; this.forceUpdate(); }).catch(() => {});
@@ -1304,6 +1318,9 @@ class Component extends DCLogic {
     if (this.xfadeTimer) clearInterval(this.xfadeTimer);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onScroll);
+    window.removeEventListener('touchstart', this.kickPlay);
+    window.removeEventListener('scroll', this.kickPlay);
+    document.removeEventListener('visibilitychange', this.tryPlayVis);
     window.removeEventListener('keydown', this.onKey);
     document.body.style.overflow = '';
   }
