@@ -201,6 +201,85 @@ export const steps = {
       nontech:'The last checkpoint reads the AI\'s response before it reaches the user — blocking any response that accidentally contains API keys, database passwords, system instructions, or is too short to be a real answer. If something is blocked here, the user gets a safe error response, never the raw output.'
     }
   ],
+  push2prod: [
+    {
+      emoji:'🚀', title:'Push Triggers the Pipeline',
+      tech:'A push to main fires the GitHub webhook at the Jenkins /github-webhook/ endpoint. The job is configured with GitHub hook trigger for GITScm polling and Pipeline script from SCM, so Jenkins reads the Jenkinsfile from the commit being built — the pipeline definition is versioned with the code it builds.',
+      nontech:'The moment a developer pushes their code, GitHub notifies the build server and the release process starts on its own. Nobody has to log in and press anything.'
+    },
+    {
+      emoji:'📥', title:'Checkout & Build',
+      tech:'The Checkout stage runs checkout scm to pull the exact commit. The Build stage steps into app/ with dir() and runs npm ci, installing from the lockfile for a byte-identical dependency tree rather than resolving fresh versions the way npm install would.',
+      nontech:'The server downloads the exact version of the code that was just pushed and installs everything the app needs — from a locked list, so the build comes out identical every single time.'
+    },
+    {
+      emoji:'🧪', title:'Automated Tests',
+      tech:'Jest runs the Supertest integration suite against the Express routes (/, /health, /api/info) and writes JUnit XML. The junit publisher ingests that XML so results, trends, and failures render natively in the Jenkins UI. A failing test fails the stage and nothing downstream runs.',
+      nontech:'The app’s automated tests run against every important page and endpoint. Results appear as a readable report, and if anything fails the release stops right there — broken code cannot continue.'
+    },
+    {
+      emoji:'📦', title:'Versioned Artifact',
+      tech:'The Package stage produces a versioned .tar.gz and archives it with archiveArtifacts plus fingerprinting, so the build output is downloadable from the build page and Jenkins can trace which builds produced or consumed that exact file.',
+      nontech:'The finished app is bundled into a single labelled file and stored with the build record, so any past version can be downloaded and inspected later.'
+    },
+    {
+      emoji:'🐳', title:'Docker Image Build',
+      tech:'A multi-stage Dockerfile keeps build tooling out of the runtime layer. The final image runs as a non-root user and declares a HEALTHCHECK, and is tagged twice: with the Jenkins BUILD_NUMBER for traceability and with latest for convenience.',
+      nontech:'The app is packed into a container — a self-contained box holding the app and everything it needs to run. The box is kept small, runs without administrator rights, and knows how to report whether it is healthy.'
+    },
+    {
+      emoji:'☁️', title:'Push to Docker Hub',
+      tech:'withCredentials injects the dockerhub-creds username/token pair as masked environment variables for the length of the stage, logs in, and pushes both tags. The token exists in the Jenkinsfile only as a credential ID — never as a literal, and masked in console output.',
+      nontech:'The container is uploaded to a registry so any server can pull it. The account password is supplied by the build server at the moment it is needed and never appears in the project files or the logs.'
+    },
+    {
+      emoji:'✋', title:'Manual Approval Gate',
+      tech:'An input step pauses the run and waits for a human to click Deploy, wrapped in a 15-minute timeout so an unattended build expires instead of holding a Jenkins executor indefinitely. This is the boundary between continuous integration and continuous deployment.',
+      nontech:'The pipeline stops and waits for a person to approve the release. If nobody responds within fifteen minutes, the run expires on its own rather than sitting there forever.'
+    },
+    {
+      emoji:'🖥️', title:'Deploy over SSH & Verify',
+      tech:'sshagent loads the deploy-vm-ssh private key, connects to the VM, pulls the new tag, and replaces the running container with --restart unless-stopped so it survives a reboot. The Verify stage then curls /health on the VM’s public IP — the build only goes green if the deployed app actually responds.',
+      nontech:'The pipeline logs into the server, swaps the old version of the app for the new one, and sets it to restart automatically if the machine reboots. Finally it visits the live site itself and only declares success once the site answers.'
+    }
+  ],
+  terraswitch: [
+    {
+      emoji:'🔐', title:'Authenticate to Azure',
+      tech:'az login plus az account set establishes the identity Terraform will use. The provider block deliberately contains no credentials — authentication comes from the CLI session, ARM_* environment variables, or a managed identity in CI, so nothing sensitive is ever written into the repository.',
+      nontech:'You sign in to Azure with your own account first. The code itself holds no passwords or keys — it simply uses whoever is signed in, which is what keeps secrets out of the project files.'
+    },
+    {
+      emoji:'🗄️', title:'Bootstrap the Remote State Backend',
+      tech:'Terraform cannot store its state in a storage account it has not created yet, so scripts/bootstrap-backend.sh uses the Azure CLI once to create the state resource group, a hardened storage account (TLS 1.2, HTTPS-only, no public blob access), the tfstate container, and a Storage Blob Data Contributor role assignment so Azure AD auth to the backend works.',
+      nontech:'Terraform keeps a record of everything it builds, and that record needs somewhere safe to live. A one-time setup script creates that secure storage location in Azure before the main deployment ever runs.'
+    },
+    {
+      emoji:'🧭', title:'Workspace Selects the Environment',
+      tech:'locals.tf holds env_config, a map of per-environment profiles — region, VNet CIDR, subnet map, storage replication, Key Vault SKU, purge protection, retention days. local.config = lookup(env_config, terraform.workspace, default_config) resolves the right profile at plan time, and the default_config fallback means any unlisted workspace name still applies.',
+      nontech:'The code keeps a small table of settings, one row per environment. Choosing an environment picks that row, so development gets cheap settings and production gets strong ones — from exactly the same code.'
+    },
+    {
+      emoji:'🧱', title:'Modules Compose the Stack',
+      tech:'The root main.tf wires four modules together: resource group, virtual network (a subnet per for_each entry, each with service endpoints and a baseline NSG), storage account, and key vault. A random_string suffix held in state guarantees globally unique storage and vault names per workspace, and the storage and vault firewall rules reference the app subnet ID output by the network module — a real dependency, not a hardcoded value.',
+      nontech:'Four reusable building blocks are assembled into a complete environment: a container for the resources, a private network, a file store, and a secure vault for secrets. Each environment gets its own uniquely named copy of the set.'
+    },
+    {
+      emoji:'🛡️', title:'Security Hardening Applied',
+      tech:'The modules bake in the baseline: HTTPS-only storage with minimum TLS 1.2, anonymous blob access disabled, versioning plus soft delete, and firewalls with default_action Deny admitting only the app subnet, operator IPs, and trusted Azure services. Key Vault uses RBAC authorization with soft delete and environment-driven purge protection. Sensitive inputs and outputs are marked sensitive, so Terraform redacts them from plans, applies, and logs.',
+      nontech:'Every environment is locked down the same way automatically: encrypted connections only, storage and secret vault closed to the public internet by default, and sensitive values hidden from anything the tool prints on screen.'
+    },
+    {
+      emoji:'🚦', title:'Plan & Apply per Workspace',
+      tech:'terraform workspace select dev, then plan -out=tfplan and apply tfplan — roughly twelve resources per environment. Selecting prod and repeating produces eastus2, GRS replication, a premium Key Vault SKU, and purge protection purely from the workspace name. Each workspace writes its own state blob (azure-multienv.tfstateenv:dev, :prod), and blob leases lock the state so two applies cannot collide.',
+      nontech:'Each environment is built with the same two commands — preview the changes, then apply them. Every environment keeps its own separate record, so working on one can never damage another, and two people cannot corrupt it by running changes at the same time.'
+    },
+    {
+      emoji:'➕', title:'A Third Environment for Free',
+      tech:'terraform workspace new test followed by plan and apply deploys a complete third environment with zero code changes — locals.tf already carries a test profile, and even without one the default_config fallback would apply cleanly. Running terraform state list per workspace demonstrates the states are fully isolated.',
+      nontech:'Creating a brand-new environment took no code changes at all — just a new name. That is the whole point of the pattern: adding environments should cost nothing.'
+    }
+  ],
   inventory: [
     {
       emoji:'📦', title:'Supplier Data Ingestion',
