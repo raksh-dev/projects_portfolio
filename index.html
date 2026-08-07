@@ -362,10 +362,9 @@
 
     <!-- Top bar -->
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 40px;">
-      <div style="display: flex; background: #1A1A17; border: 1px solid rgba(222,219,200,0.12); border-radius: 999px; padding: 3px; gap: 2px;">
-        <button onClick="{{ setTech }}" style="background: {{ audTechBg }}; color: {{ audTechCol }}; padding: 7px 20px; border-radius: 999px; border: none; font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.25s;">Technical</button>
-        <button onClick="{{ setNontech }}" style="background: {{ audNontechBg }}; color: {{ audNontechCol }}; padding: 7px 20px; border-radius: 999px; border: none; font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.25s;">Non-Technical</button>
-      </div>
+      <button onClick="{{ toggleAudience }}" title="{{ audTitle }}" style="display: inline-flex; align-items: center; gap: 8px; background: {{ audBg }}; color: {{ audCol }}; border: 1px solid {{ audBrd }}; padding: 8px 18px; border-radius: 999px; font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.25s;" style-hover="border-color: #DEDBC8;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"></path><path d="m8 6-6 6 6 6"></path></svg>Technical details
+      </button>
       <button onClick="{{ closeOverlay }}" aria-label="Close" style="display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(222,219,200,0.35); background: transparent; color: #DEDBC8; cursor: pointer; flex-shrink: 0; transition: background 0.2s, color 0.2s;" style-hover="background: #DEDBC8; color: #000000;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
       </button>
@@ -1501,7 +1500,7 @@ class Component extends DCLogic {
     this.paraRef = React.createRef();
     this.videoRef = React.createRef();
     this.videoRefB = React.createRef();
-    this.state = { openProject: null, tab: 'overview', audience: 'tech', stepIdx: 0 };
+    this.state = { openProject: null, tab: 'overview', audience: 'nontech', stepIdx: 0 };
     this.paraText = "Over the last three years, I have built and deployed production-grade Generative AI and LLM systems for FinTech and Healthcare \u2014 multi-agent architectures, RAG pipelines, NLP systems, and scalable APIs using LangChain, OpenAI, FastAPI, and AWS. That work has delivered up to 70% automation improvements and low-latency, secure AI deployments.";
   }
 
@@ -1699,12 +1698,11 @@ class Component extends DCLogic {
       brdOverview: tabBrd('overview'), brdArch: tabBrd('arch'), brdSteps: tabBrd('steps'), brdResults: tabBrd('results'),
       dTech: aud === 'tech' ? 'block' : 'none',
       dNontech: aud === 'nontech' ? 'block' : 'none',
-      setTech: () => this.setState({ audience: 'tech' }),
-      setNontech: () => this.setState({ audience: 'nontech' }),
-      audTechBg: aud === 'tech' ? '#DEDBC8' : 'transparent',
-      audTechCol: aud === 'tech' ? '#000000' : '#8B8A7D',
-      audNontechBg: aud === 'nontech' ? '#DEDBC8' : 'transparent',
-      audNontechCol: aud === 'nontech' ? '#000000' : '#8B8A7D',
+      toggleAudience: () => this.setState({ audience: aud === 'tech' ? 'nontech' : 'tech' }),
+      audBg: aud === 'tech' ? '#DEDBC8' : 'transparent',
+      audCol: aud === 'tech' ? '#000000' : '#A8A79B',
+      audBrd: aud === 'tech' ? '#DEDBC8' : 'rgba(222,219,200,0.25)',
+      audTitle: aud === 'tech' ? 'Back to the plain-English write-up' : 'Show the technical write-up',
       stepNum: String(si + 1).padStart(2, '0'),
       stepEmoji: st.emoji || '',
       stepTitle: this.decode(st.title || ''),
