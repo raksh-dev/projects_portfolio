@@ -2,107 +2,107 @@ export const steps = {
   bank: [
     {
       emoji:'📄', title:'Document Received',
-      tech:'A loan application triggers ingestion of bank statements in any format — PDF (text or scanned), CSV exports, or images. The system auto-detects document type using mime-type headers and content heuristics.',
-      nontech:'A customer uploads their bank statements when applying for a loan. The system accepts any format — it can read PDF files, spreadsheets, or even photos of paper statements.'
+      tech:'A loan application triggers ingestion of bank statements in any format - PDF (text or scanned), CSV exports, or images. The system auto-detects document type using mime-type headers and content heuristics.',
+      nontech:'A customer uploads their bank statements when applying for a loan. The system accepts any format - it can read PDF files, spreadsheets, or even photos of paper statements.'
     },
     {
       emoji:'🔍', title:'Multi-format Parsing',
       tech:'pdfplumber extracts text-based PDFs with table detection. Tesseract OCR + preprocessing handles scanned documents. Custom regex patterns + learned templates extract transaction rows, dates, amounts, and descriptions across 50+ bank formats.',
-      nontech:'Like a very fast reader, the system reads through every page, finding all the transactions — dates, amounts, and descriptions — no matter how the bank formatted the document.'
+      nontech:'Like a very fast reader, the system reads through every page, finding all the transactions - dates, amounts, and descriptions — no matter how the bank formatted the document.'
     },
     {
       emoji:'🧠', title:'AI Transaction Classification',
       tech:'Each transaction is sent to GPT-4 with a structured prompt requesting JSON output: category (income, housing, food, etc.), subcategory, risk signals (overdraft, irregular pattern), and confidence score. Batch calls optimize cost and latency.',
-      nontech:'The AI reads each transaction and understands what it is — salary income, rent payment, grocery shopping — and flags anything unusual, like overdrafts or irregular deposits.'
+      nontech:'The AI reads each transaction and understands what it is - salary income, rent payment, grocery shopping - and flags anything unusual, like overdrafts or irregular deposits.'
     },
     {
       emoji:'🔎', title:'Semantic Indexing',
       tech:'Structured transaction records are embedded using OpenAI text-embedding-3-small and stored in a vector index (Pinecone or pgvector). This enables semantic retrieval: "high-value irregular deposits" retrieves relevant transactions even with no keyword match.',
-      nontech:'The system creates an intelligent index of all the financial data, so it can answer questions about it instantly — even if the question is phrased differently from how the data is stored.'
+      nontech:'The system creates an intelligent index of all the financial data, so it can answer questions about it instantly - even if the question is phrased differently from how the data is stored.'
     },
     {
       emoji:'🎙️', title:'Voice & Text Q&A',
       tech:'Voice queries processed via Whisper API → text → embedded → top-k retrieved from vector store → GPT-4 generates grounded answer with citations. Text queries skip transcription. Full RAG (Retrieval-Augmented Generation) pipeline ensures answers are factually grounded in the actual data.',
-      nontech:'Loan officers can ask questions out loud or type them — "Is the income consistent?" or "Any large unusual payments?" — and get instant, accurate answers based on the real bank data.'
+      nontech:'Loan officers can ask questions out loud or type them - "Is the income consistent?" or "Any large unusual payments?" - and get instant, accurate answers based on the real bank data.'
     },
     {
       emoji:'✅', title:'Underwriting Decision Output',
       tech:'Structured JSON report generated: income summary, expense breakdown, risk signals, debt-to-income ratio, cashflow consistency score. Output standardized to integrate directly with underwriting platforms via REST API. Decision latency: under 90 seconds for a complete 3-month statement analysis.',
-      nontech:'The system produces a clean, standardized summary for the loan officer — income, spending patterns, risk factors — everything they need to make a decision, in under 2 minutes instead of days.'
+      nontech:'The system produces a clean, standardized summary for the loan officer - income, spending patterns, risk factors - everything they need to make a decision, in under 2 minutes instead of days.'
     }
   ],
   pulse: [
     {
       emoji:'📡', title:'Multi-source Ingestion',
       tech:'producer.py generates realistic mock reviews (Faker-based, sentiment-aligned phrase banks, skewed 4–5 star distribution). Reddit/PRAW and Twitter/Tweepy connectors normalize social data into the same record schema. Publisher abstracts destination: local JSONL file in LOCAL_MODE, else boto3 put_record to Kinesis partitioned by product_id.',
-      nontech:'The system accepts reviews and comments from multiple sources at once — a mock data generator for testing, real Reddit comments, and live tweets — all converted into the same standard format before processing.'
+      nontech:'The system accepts reviews and comments from multiple sources at once - a mock data generator for testing, real Reddit comments, and live tweets - all converted into the same standard format before processing.'
     },
     {
       emoji:'⚡', title:'Real-time VADER Scoring',
       tech:'consumer.py polls Kinesis shards (or tails local JSONL) and applies VADER to each record in-process. Compound score thresholds: ≥0.05 = positive, ≤−0.05 = negative, else neutral. Zero API cost, zero network latency. Scores attached as sentiment_label and sentiment_score before any further processing.',
-      nontech:'Every review gets a sentiment score instantly — positive, neutral, or negative — using a rule-based algorithm that runs right inside the app. No external AI call needed, so it\'s fast and free.'
+      nontech:'Every review gets a sentiment score instantly - positive, neutral, or negative - using a rule-based algorithm that runs right inside the app. No external AI call needed, so it\'s fast and free.'
     },
     {
       emoji:'🔍', title:'v2 Enrichment Pipeline',
-      tech:'enrichment.py loaded lazily (v1 skips it entirely). Enricher: (1) normalize_text → text_hash for dedup — if hash seen, returns None and record is dropped; (2) langdetect with seeded random for determinism → language field; (3) KeyBERT top-N extraction → keywords ARRAY. Degrades gracefully if KeyBERT model unavailable.',
-      nontech:'In version 2, each review is also checked for duplicates (so the same text doesn\'t count twice), tagged with its language, and analyzed for the most important keywords — giving much richer data for the dashboard without slowing down the pipeline.'
+      tech:'enrichment.py loaded lazily (v1 skips it entirely). Enricher: (1) normalize_text → text_hash for dedup - if hash seen, returns None and record is dropped; (2) langdetect with seeded random for determinism → language field; (3) KeyBERT top-N extraction → keywords ARRAY. Degrades gracefully if KeyBERT model unavailable.',
+      nontech:'In version 2, each review is also checked for duplicates (so the same text doesn\'t count twice), tagged with its language, and analyzed for the most important keywords - giving much richer data for the dashboard without slowing down the pipeline.'
     },
     {
       emoji:'📦', title:'Micro-batch → Snowpipe Auto-ingest',
-      tech:'MicroBatchSink buffers records and flushes to S3 (or local disk) when MICRO_BATCH_SECONDS elapses or MICRO_BATCH_MAX_RECORDS accumulates. Output: NDJSON on Hive-style date path (reviews/raw/YYYY/MM/DD/HH/batch-…json). S3 object-created event → SQS → Snowpipe COPY INTO REVIEWS_RAW. If Snowflake is unavailable, records queue in S3 and self-heal on resume — no custom retry logic.',
-      nontech:'Instead of sending reviews to Snowflake one by one, the system bundles them into files every few seconds and drops them in S3. Snowflake automatically picks them up and loads them — and if Snowflake goes down briefly, nothing is lost; the files just wait in S3.'
+      tech:'MicroBatchSink buffers records and flushes to S3 (or local disk) when MICRO_BATCH_SECONDS elapses or MICRO_BATCH_MAX_RECORDS accumulates. Output: NDJSON on Hive-style date path (reviews/raw/YYYY/MM/DD/HH/batch-…json). S3 object-created event → SQS → Snowpipe COPY INTO REVIEWS_RAW. If Snowflake is unavailable, records queue in S3 and self-heal on resume - no custom retry logic.',
+      nontech:'Instead of sending reviews to Snowflake one by one, the system bundles them into files every few seconds and drops them in S3. Snowflake automatically picks them up and loads them - and if Snowflake goes down briefly, nothing is lost; the files just wait in S3.'
     },
     {
       emoji:'📊', title:'Snowpark Aggregations',
       tech:'snowpark_jobs.py: hourly_rollup() groups REVIEWS_RAW by product and hour, computing volume + avg_score + pct_positive/neutral/negative → SENTIMENT_AGG (idempotent upsert). keyword_frequency() FLATTENs KEYWORDS arrays and counts by day + label → KEYWORD_FREQ. Runnable via cron or registered as Snowflake Task (DDL in schema_v2.sql).',
-      nontech:'Snowflake automatically crunches the raw data every hour into clean summaries — total reviews, average sentiment, percentage positive/negative per product — and separately counts which keywords come up most often. These are what power the live charts on the dashboard.'
+      nontech:'Snowflake automatically crunches the raw data every hour into clean summaries - total reviews, average sentiment, percentage positive/negative per product - and separately counts which keywords come up most often. These are what power the live charts on the dashboard.'
     },
     {
       emoji:'🤖', title:'Groq LLM Batch Summarization',
       tech:'llm_summarizer.py: _fetch_recent() pulls last LLM_LOOKBACK_MINUTES from REVIEWS_RAW; _group() buckets by (product_id, source); _call_groq() sends ≤LLM_BATCH_SIZE reviews per call with JSON response mode → {summary, positive_themes, negative_themes, recommended_action}; _write_insight() inserts one row to INSIGHTS_SUMMARY. Model: llama-3.1-8b-instant. Batching ~50–100 reviews/call cuts API invocations ~98% vs per-event. Runs on cadence via --loop flag.',
-      nontech:'Every 10 minutes, the system bundles the latest reviews and sends them to Groq\'s AI (Llama 3.1) as one batch. The AI produces a short summary — what people are saying, what\'s going well, what\'s going badly, and what to do about it. Batching keeps costs at near-zero.'
+      nontech:'Every 10 minutes, the system bundles the latest reviews and sends them to Groq\'s AI (Llama 3.1) as one batch. The AI produces a short summary - what people are saying, what\'s going well, what\'s going badly, and what to do about it. Batching keeps costs at near-zero.'
     },
     {
       emoji:'🚨', title:'Anomaly Detection & Live Dashboard',
-      tech:'anomaly_detection.py: per product, reads last ANOMALY_WINDOW_HOURS of SENTIMENT_AGG hourly buckets (min ANOMALY_MIN_VOLUME filter). Computes baseline mean + std of pct_negative over preceding buckets; flags if latest bucket > mean + k·std (default k=2). Requires ≥4 buckets before firing. Breach written to SENTIMENT_ALERTS with z-score. Streamlit dashboard queries all four tables via safe_query() (60s TTL cache) — renders positivity gauge, 24h trend, LLM insight cards, keyword cloud, and alert panel. Missing tables show setup hints instead of errors.',
-      nontech:'The system watches each product\'s normal rate of negative reviews. If a recent hour is way above its own baseline — statistically unusual — it raises an alert. The Streamlit dashboard shows everything live: a sentiment gauge, trend charts, the AI\'s insight cards, and any active alerts — updating every minute.'
+      tech:'anomaly_detection.py: per product, reads last ANOMALY_WINDOW_HOURS of SENTIMENT_AGG hourly buckets (min ANOMALY_MIN_VOLUME filter). Computes baseline mean + std of pct_negative over preceding buckets; flags if latest bucket > mean + k·std (default k=2). Requires ≥4 buckets before firing. Breach written to SENTIMENT_ALERTS with z-score. Streamlit dashboard queries all four tables via safe_query() (60s TTL cache) - renders positivity gauge, 24h trend, LLM insight cards, keyword cloud, and alert panel. Missing tables show setup hints instead of errors.',
+      nontech:'The system watches each product\'s normal rate of negative reviews. If a recent hour is way above its own baseline - statistically unusual - it raises an alert. The Streamlit dashboard shows everything live: a sentiment gauge, trend charts, the AI\'s insight cards, and any active alerts - updating every minute.'
     }
   ],
   resolvemesh: [
     {
       emoji:'📬', title:'Support Ticket Received',
-      tech:'A support ticket (JSON payload) arrives via webhook or queue message. The system validates the payload schema, publishes it to GCP Pub/Sub via a Cloud Run forwarder that bridges Azure Event Grid — simpler than VPN peering for cross-cloud events and near-zero cost at low volume. Vertex AI Pipelines picks up the event and initiates the DAG run.',
-      nontech:'A support ticket comes in from wherever it was submitted — email, chat, or a support tool — and the system immediately starts working on it, routing it through the pipeline automatically.'
+      tech:'A support ticket (JSON payload) arrives via webhook or queue message. The system validates the payload schema, publishes it to GCP Pub/Sub via a Cloud Run forwarder that bridges Azure Event Grid - simpler than VPN peering for cross-cloud events and near-zero cost at low volume. Vertex AI Pipelines picks up the event and initiates the DAG run.',
+      nontech:'A support ticket comes in from wherever it was submitted - email, chat, or a support tool - and the system immediately starts working on it, routing it through the pipeline automatically.'
     },
     {
       emoji:'🔍', title:'Azure NLP Enrichment',
       tech:'Azure Cognitive Services Language API extracts entities (product names, error codes, user IDs), classifies intent category (billing, technical, account), produces sentiment score, and assigns priority P1–P4 based on urgency keywords and sentiment thresholds. Output is a structured JSON payload forwarded to the next pipeline step. Enrichment adds context the LLM uses for grounding.',
-      nontech:'Azure reads the ticket and understands it deeply — which product is involved, whether the customer is angry or calm, what they actually want, and how urgently they need help. All this understanding gets packaged up and passed to the next step.'
+      nontech:'Azure reads the ticket and understands it deeply - which product is involved, whether the customer is angry or calm, what they actually want, and how urgently they need help. All this understanding gets packaged up and passed to the next step.'
     },
     {
       emoji:'📚', title:'Azure Cognitive Search — KB Retrieval',
       tech:'Azure Cognitive Search index is pre-populated from the knowledge base (PDFs, Confluence pages, Markdown docs) with vector embeddings. The NLP payload (entities + intent) constructs a semantic search query. Top-3 KB articles ranked by similarity score are retrieved and included in the prompt context for the LLM. This grounds the reply in actual KB content rather than model hallucinations.',
-      nontech:'Azure searches through the entire knowledge base using AI-powered similarity — not just keyword matching — to find the 3 most relevant help articles. These articles are then handed to the LLM so it writes a reply that\'s actually accurate, not made up.'
+      nontech:'Azure searches through the entire knowledge base using AI-powered similarity - not just keyword matching - to find the 3 most relevant help articles. These articles are then handed to the LLM so it writes a reply that\'s actually accurate, not made up.'
     },
     {
       emoji:'🤖', title:'AWS Bedrock LLM Draft',
       tech:'AWS Lambda receives the structured NLP payload + retrieved KB article snippets. A chain-of-thought prompt instructs Bedrock (Claude or Titan) to: read the enriched ticket context, ground the reply in the provided KB articles, stay under 300 words, and cite which specific KB articles were used. DynamoDB persists every inference request + response for audit. S3 archives raw payloads.',
-      nontech:'AWS generates the actual reply draft — grounded in the knowledge base articles that were retrieved, under 300 words, with references to the articles used. Every draft is saved for auditing so support managers can review what the AI has been writing.'
+      nontech:'AWS generates the actual reply draft - grounded in the knowledge base articles that were retrieved, under 300 words, with references to the articles used. Every draft is saved for auditing so support managers can review what the AI has been writing.'
     },
     {
       emoji:'👤', title:'Human Review Gate',
       tech:'Configurable flag (enabled/disabled per ticket type or SLA tier). When enabled, a Cloud Run webhook serves the draft to a reviewer UI. Reviewer can approve, edit, or reject. Approved → delivery step. Rejected → re-runs LLM with reviewer feedback. Gate adds latency but is excluded from the p95 SLA measurement per NFR-1. Dead-letter queue catches unreviewed drafts after timeout.',
-      nontech:'For important tickets, a human can review the AI\'s draft before it\'s sent — approve it as-is, make edits, or reject it and ask the AI to try again with feedback. This step is optional and can be turned on or off per ticket type.'
+      nontech:'For important tickets, a human can review the AI\'s draft before it\'s sent - approve it as-is, make edits, or reject it and ask the AI to try again with feedback. This step is optional and can be turned on or off per ticket type.'
     },
     {
       emoji:'📤', title:'Reply Delivery + Audit',
       tech:'Approved draft posted back to origin system via Zendesk REST API or Jira Service Management API. A structured audit event is emitted: {ticket_id, latency_ms, model_version, kb_articles_used, reviewer_id, status}. OpenTelemetry spans from all three clouds are correlated in GCP Cloud Trace so a single trace shows Azure NLP latency, KB retrieval time, AWS Bedrock inference time, and delivery time together.',
-      nontech:'The approved reply is automatically posted back to wherever the ticket came from. A full audit record is created for every ticket — who approved it, how long each step took, which articles were cited. Cross-cloud monitoring shows the entire journey in one dashboard.'
+      nontech:'The approved reply is automatically posted back to wherever the ticket came from. A full audit record is created for every ticket - who approved it, how long each step took, which articles were cited. Cross-cloud monitoring shows the entire journey in one dashboard.'
     },
     {
       emoji:'🔭', title:'Observability + Cost Guardrails',
       tech:'OpenTelemetry collectors deployed on each cloud ship correlated trace spans to GCP Cloud Trace. Cloud Monitoring creates latency distribution dashboards. Budget alerts configured at $50/day per cloud account (GCP + Azure + AWS) via each cloud\'s native billing API, wired to PagerDuty. Terraform destroy + re-apply drill validated: full teardown and reprovision in &lt;20 minutes.',
-      nontech:'The system monitors itself across all three clouds from one dashboard — showing total latency, cost per ticket, and firing alerts if daily spend exceeds the budget on any cloud. The entire infrastructure can be torn down and rebuilt from scratch in under 20 minutes.'
+      nontech:'The system monitors itself across all three clouds from one dashboard - showing total latency, cost per ticket, and firing alerts if daily spend exceeds the budget on any cloud. The entire infrastructure can be torn down and rebuilt from scratch in under 20 minutes.'
     }
   ],
   opsforge: [
